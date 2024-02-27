@@ -1,0 +1,9 @@
+const express = require('express');
+const router = express.Router();
+const apartmentController = require('../controllers/apartment_controller');
+
+router.use(express.json());
+
+router.post('/createApartment', apartmentController.createApartment);
+
+module.exports = router;
