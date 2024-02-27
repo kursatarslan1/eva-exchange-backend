@@ -10,7 +10,7 @@ class Announcement{
     }
 
     static async create(title, content, apartment_id){
-        const queryText = 'INSERT INTO announcements (title, content, apartment_id) VALUES($1,$2,$3)';
+        const queryText = 'INSERT INTO announcements (title, content, apartment_id) VALUES($1,$2,$3)'; test
         const values = [title, content, apartment_id];
 
         try{
