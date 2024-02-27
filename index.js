@@ -9,6 +9,7 @@ const racRoutes = require('./routes/rac_routes');
 const announcementRoutes = require('./routes/announcement_routes');
 const cohabitantsRoutes = require('./routes/cohabitants_routes');
 const messageRoutes = require('./routes/message_routes');
+const licenseRoutes = require('./routes/license_routes');
 
 require('dotenv').config();
 const cors = require('cors');
@@ -25,6 +26,7 @@ app.use('/steyon/rac', racRoutes);
 app.use('/steyon/announcement', announcementRoutes);
 app.use('/steyon/cohabitants', cohabitantsRoutes);
 app.use('/steyon/messages', messageRoutes);
+app.use('/steyon/license', licenseRoutes);
 
 const PORT = 3000;
 
