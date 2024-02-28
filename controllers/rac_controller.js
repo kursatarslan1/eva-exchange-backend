@@ -9,7 +9,7 @@ async function createRac(req, res){
             throw new Error('Request or complaints creation failed');
         }
         res.json({ success: 'true' });
-    }catch(error){
+    } catch(error) {
         console.error('Unexpected error: ', error);
         throw error;
     }
