@@ -49,7 +49,7 @@ async function login(req, res) {
             return res.status(401).json({ error: 'Password error' });
         }
 
-        const token = jwt.sign({ userId: resident.resident_id, email: resident.email }, process.env.JWT_SECRET);
+        const token = jwt.sign({ resident }, process.env.JWT_SECRET);
 
         res.json({ token });
     } catch (error) {
