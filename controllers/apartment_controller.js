@@ -3,40 +3,44 @@ const { Block } = require('../models/block_model');
 const Unit = require('../models/unit_model');
 
 async function createApartment(req, res) {
-    const { manager_id, apartment_id, apartment_name, apartment_country, apartment_city, apartment_state, apartment_full_address, apartment_due_amount, apartment_license, record_status, blocks } = req.body;
-
-    let apartmentResult, blockResult;
+    const { manager_id, apartment_name, apartment_country, apartment_city, apartment_state, apartment_full_address, apartment_due_amount, apartment_license, record_status, blocks } = req.body;
 
     try {
         // Apartman oluşturma işlemi
-        apartmentResult = await Apartment.create(apartment_id, apartment_name, apartment_country, apartment_city, apartment_state, apartment_full_address, apartment_due_amount, apartment_license, record_status);
+        const apartmentResult = await Apartment.create(apartment_name, apartment_country, apartment_city, apartment_state, apartment_full_address, apartment_due_amount, apartment_license, record_status);
 
         if (!apartmentResult) {
-            throw new Error('Apartment creation failed');
+            console.error('Apartment creation failed');
+            return res.status(500).json({ error: 'Create apartment unsuccessful' });
         }
+        
         // Yönetici ve apartman arasındaki ilişkiyi oluşturma işlemi
-        await Apartment.createRelation(manager_id, apartment_id);
+        await Apartment.createRelation(manager_id, apartmentResult);
 
-        // Blokları oluşturma işlemi
-        blockResult = await Block.create(blocks);
-
-        if (!blockResult) {
-            // Blok oluşturma işlemi başarısız oldu, önceki apartman oluşturma işlemini geri al
-            //await Apartment.delete(apartment_id); // Örnek bir delete fonksiyonu kullanılarak apartmanın geri alınması işlemi yapılmalıdır
-            throw new Error('Block creation failed');
+        for (const block of blocks) {
+            // Her bir blok için apartman ID'sini ata
+            block.apartment_id = apartmentResult;
+        
+            // Blok oluşturma işlemini gerçekleştir
+            const blockResult = await Block.create(block);
+        
+            if (!blockResult) {
+                console.error('Block creation failed');
+                return res.status(500).json({ error: 'Create block unsuccessful' });
+            }
+            
+            // Her bir blok için birimleri oluşturma işlemi
+            await Unit.createUnitsForBlocks([block]); // Blok verisini bir dizi içinde gönder
         }
 
-        // Bloklar başarıyla oluşturulduysa, birimleri de eklenir
-        await Unit.createUnitsForBlocks(blocks);
-
-        // JSON Web Token oluşturma
         // Başarıyla tamamlanan işlemi yanıtla
-        res.json({ message: 'Sucess create apartment and blocks' });
+        res.json({ message: 'Success create apartment and blocks' });
     } catch (error) {
-        console.error('create error: ' + error);
-        res.status(500).json({ error: 'create apartment unsuccessful' });
+        console.error('Create error: ' + error);
+        res.status(500).json({ error: 'Create apartment and blocks unsuccessful' });
     }
 }
+
 
 async function getApartment(req, res){
     const manager_id  = req.query.manager_id;

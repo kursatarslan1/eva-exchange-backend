@@ -19,7 +19,9 @@ async function register(req, res) {
         const hashedPassword = await bcrypt.hash(password, 10); 
         await Password.create(userResult.manager_id, hashedPassword, 'E');
 
-        res.json({userResult});
+        const token = jwt.sign({ userResult }, process.env.JWT_SECRET);
+
+        res.json({userResult, token});
     } catch (error){
         console.error('Error register: ' + error);
         res.status(500).json({ error: 'User not created' });

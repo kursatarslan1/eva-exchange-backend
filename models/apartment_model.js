@@ -13,7 +13,8 @@ class Apartment{
         this.record_status = record_status;
     }
 
-    static async create(apartment_id, apartment_name, apartment_country, apartment_city, apartment_state, apartment_full_address, apartment_due_amount, apartment_license, record_status){
+    static async create(apartment_name, apartment_country, apartment_city, apartment_state, apartment_full_address, apartment_due_amount, apartment_license, record_status){
+        const apartment_id = generateApartmentId();
         const queryText = 'INSERT INTO apartment (apartment_id, apartment_name, apartment_country, apartment_city, apartment_state, apartment_full_address, apartment_due_amount, apartment_license, record_status) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9)';
         const values = [apartment_id, apartment_name, apartment_country, apartment_city, apartment_state, apartment_full_address, apartment_due_amount, apartment_license, record_status];
 
@@ -106,5 +107,18 @@ class Apartment{
         }
     }
 }
+
+function generateApartmentId() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    const milliseconds = String(now.getMilliseconds()).padStart(3, '0');
+  
+    return `${year}${month}${day}${hours}${minutes}${seconds}${milliseconds}`;
+  }
 
 module.exports = { Apartment };
