@@ -51,7 +51,7 @@ async function getApartment(req, res){
 }
 
 async function getApartmentDetail(req, res){
-    const { manager_id, apartment_id } = req.body;
+    const { manager_id, apartment_id } = req.query;
     
     try{
         const apartmentDetail = await Apartment.getApartmentDetail(manager_id, apartment_id);
