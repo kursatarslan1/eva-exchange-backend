@@ -48,9 +48,9 @@ async function login(req, res) {
             return res.status(401).json({ error: 'Password error' });
         }
 
-        const token = jwt.sign({ userId: manager.manager_id, email: manager.email }, process.env.JWT_SECRET);
+        const token = jwt.sign({ manager }, process.env.JWT_SECRET);
 
-        res.json({ token });
+        res.json({ manager, token });
     } catch (error) {
         console.error('Login error: ' + error);
         res.status(500).json({ error: 'Login unsuccessful' });

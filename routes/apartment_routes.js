@@ -5,5 +5,7 @@ const apartmentController = require('../controllers/apartment_controller');
 router.use(express.json());
 
 router.post('/createApartment', apartmentController.createApartment);
+router.get('/getApartment', apartmentController.getApartment);
+router.get('/getApartmentDetail', apartmentController.getApartmentDetail);
 
 module.exports = router;

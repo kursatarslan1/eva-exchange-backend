@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(cors());
 app.set('trust proxy', true);
 
-app.use('/steyon/manager', managerRoutes);
+app.use('/steyon/manager', managerRoutes); // is auth sor!
 app.use('/steyon/apartment', apartmentRoutes);
 app.use('/steyon/resident', residentRoutes);
 app.use('/steyon/address', addressRoutes);

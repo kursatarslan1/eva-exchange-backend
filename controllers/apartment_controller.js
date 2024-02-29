@@ -38,4 +38,28 @@ async function createApartment(req, res) {
     }
 }
 
-module.exports = { createApartment };
+async function getApartment(req, res){
+    const manager_id  = req.query.manager_id;
+
+    try{
+        const apartments = await Apartment.getRelationApartment(manager_id);
+        res.json({apartments});
+    } catch (error) {
+        console.error('get error: ' + error);
+        res.status(500).json({ error: 'get apartment unsuccessful' });
+    }
+}
+
+async function getApartmentDetail(req, res){
+    const { manager_id, apartment_id } = req.body;
+    
+    try{
+        const apartmentDetail = await Apartment.getApartmentDetail(manager_id, apartment_id);
+        res.json({apartmentDetail});
+    } catch (error) {
+        console.error('get error: ' + error);
+        res.status(500).json({ error: 'get apartment unsuccessful' });
+    }
+}
+
+module.exports = { createApartment, getApartment, getApartmentDetail };
