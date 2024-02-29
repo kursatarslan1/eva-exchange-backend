@@ -29,6 +29,7 @@ async function createApartment(req, res) {
                 return res.status(500).json({ error: 'Create block unsuccessful' });
             }
             
+            block.block_id = blockResult;
             // Her bir blok için birimleri oluşturma işlemi
             await Unit.createUnitsForBlocks([block]); // Blok verisini bir dizi içinde gönder
         }

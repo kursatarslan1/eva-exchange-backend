@@ -10,10 +10,10 @@ class Block {
 
     static async create(blockData) {
         try {
-            const queryText = 'INSERT INTO blocks (apartment_id, block_name, unit_count) VALUES ($1, $2, $3)';
+            const queryText = 'INSERT INTO blocks (apartment_id, block_name, unit_count) VALUES ($1, $2, $3) RETURNING block_id';
             const values = [blockData.apartment_id, blockData.block_name, blockData.unit_count];
-            await client.query(queryText, values);
-            return true; // Tüm işlemler başarıyla tamamlandı
+            const result = await client.query(queryText, values);
+            return result.rows[0].block_id; // Tüm işlemler başarıyla tamamlandı
         } catch (error) {
             console.error('Error executing create query: ', error);
             throw error;
