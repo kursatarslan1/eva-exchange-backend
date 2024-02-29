@@ -22,7 +22,6 @@ class RequestsAndComplaints{
             return true;
         } catch (error){
             console.error('Error creating request or complaints: ', error);
-            throw error;
         }
     }
 
@@ -35,7 +34,6 @@ class RequestsAndComplaints{
             return result.rows;
         } catch (error){
             console.error('Error getting request or complaints: ', error);
-            throw error;
         }
     }
 
@@ -48,7 +46,6 @@ class RequestsAndComplaints{
             return true;
         }catch (error){
             console.error('Error deleting request or complaints: ', error);
-            throw error;
         }
     }
 }

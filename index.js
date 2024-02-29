@@ -12,6 +12,7 @@ const messageRoutes = require('./routes/message_routes');
 const licenseRoutes = require('./routes/license_routes');
 const debtRoutes = require('./routes/debt_routes');
 const paymentHistoryRoutes = require('./routes/payment_history_routes');
+const knowledgeAndRulesRotes = require('./routes/knowledge_and_rules_routes');
 
 require('dotenv').config();
 const cors = require('cors');
@@ -31,6 +32,7 @@ app.use('/steyon/messages', messageRoutes);
 app.use('/steyon/license', licenseRoutes);
 app.use('/steyon/debt', debtRoutes);
 app.use('/steyon/paymentHistory', paymentHistoryRoutes);
+app.use('/steyon/knowledgeAndRules', knowledgeAndRulesRotes);
 
 const PORT = 3000;
 
