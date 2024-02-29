@@ -19,7 +19,7 @@ async function register(req, res) {
         const hashedPassword = await bcrypt.hash(password, 10); 
         await Password.create(userResult.manager_id, hashedPassword, 'E');
 
-        res.json({message: 'User registered successfully.'});
+        res.json({userResult});
     } catch (error){
         console.error('Error register: ' + error);
         res.status(500).json({ error: 'User not created' });

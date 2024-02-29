@@ -14,7 +14,7 @@ class Manager{
     }
 
     static async create(first_name, last_name, email, phone_number, photo, address, manager_role, record_status){
-        const queryText = 'INSERT INTO managers (first_name, last_name, email, phone_number, photo, address, manager_role, record_status) VALUES($1,$2,$3,$4,$5,$6,$7,$8) RETURNING manager_id';
+        const queryText = 'INSERT INTO managers (first_name, last_name, email, phone_number, photo, address, manager_role, record_status) VALUES($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *';
         const values = [first_name, last_name, email, phone_number, photo, address, manager_role, record_status];
 
         try{
