@@ -11,7 +11,7 @@ async function create(req, res){
     }
 }
 
-async function getKnowledgeAndRules(apartment_id){
+async function getKnowledgeAndRules(req, res){
     const { apartment_id } = req.body;
 
     try{
@@ -22,7 +22,7 @@ async function getKnowledgeAndRules(apartment_id){
     }
 }
 
-async function deleteKnowledgeAndRules(knowledge_and_rules_id){
+async function deleteKnowledgeAndRules(req, res){
     const { knowledge_and_rules_id } = req.body;
 
     try{
