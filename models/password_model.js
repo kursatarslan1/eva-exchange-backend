@@ -16,7 +16,6 @@ class Password {
             return result.rows[0];
         } catch (error) {
             console.error('Error executing create query:', error);
-            throw error;
         }
     }
 
@@ -29,7 +28,6 @@ class Password {
             return result.rows[0];
         } catch (error) {
             console.error('Error executing findByUserId query:', error);
-            throw error;
         }
     }
 }

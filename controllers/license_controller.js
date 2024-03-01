@@ -8,7 +8,6 @@ async function create(req, res){
         res.json({licenseRes});        
     } catch (error){
         console.error('Error creating license: ', error);
-        throw error;
     }
 }
 
@@ -20,7 +19,6 @@ async function getLicenseByApartmentId(req, res){
         res.json({getLicenseResult});
     } catch (error){
         console.error('Error creating license: ', error);
-        throw error;
     }
 }
 
@@ -32,7 +30,6 @@ async function assignLicense(req,res){
         res.json({result});
     } catch (error){
         console.error('Error creating license: ', error);
-        throw error;
     }
 }
 

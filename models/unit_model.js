@@ -12,7 +12,6 @@ class Unit {
             return true; // Tüm işlemler başarıyla tamamlandı
         } catch (error) {
             console.error('Error executing createUnitsForBlocks query: ', error);
-            throw error;
         }
     }
 }

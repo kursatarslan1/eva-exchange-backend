@@ -13,7 +13,6 @@ async function createPayment(req, res){
         res.json({ success: 'true' });
     } catch(error) {
         console.error('Unexpected error: ', error);
-        throw error;
     }
 }
 
@@ -25,7 +24,6 @@ async function getPaymentHistory(req, res){
         res.json({result});
     } catch(error) {
         console.error('Unexpected error: ', error);
-        throw error;
     }
 }
 

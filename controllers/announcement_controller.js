@@ -6,12 +6,11 @@ async function createAnnouncement(req, res){
     try{
         const announcementRes = await Announcement.create(title, content, apartment_id);
         if(!announcementRes){
-            throw new Error('Announcement creation failed!');
+            console.error('Announcement creation failed!');
         }
         res.json({ success: 'true' });
     }catch (error){
         console.error('Unexpected error: ', error);
-        throw error;
     }
 }
 
@@ -23,7 +22,6 @@ async function getAnnouncementList(req, res) {
         res.json({announcementList});
     } catch (error){
         console.error('Cannot get announcement list: ', error);
-        throw error;
     }
 }
 
@@ -33,12 +31,11 @@ async function deleteAnnouncement(req, res){
     try{
         const deleteAnnouncement = await Announcement.deleteAnnouncement(announcement_id);
         if(!deleteAnnouncement){
-            throw new Error('Deleting announcemnet unsuccessful: ', error);
+            console.error('Deleting announcemnet unsuccessful: ', error);
         }
         res.json({ success: 'true' });
     } catch (error) {
         console.error('Cannot delete announcement: ', error);
-        throw error;
     }
 }
 

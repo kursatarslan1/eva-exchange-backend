@@ -25,7 +25,6 @@ class Debt{
             return true;
         } catch (error){
             console.error('Error creating debt: ', error);
-            throw error;
         }
     }
 
@@ -38,7 +37,6 @@ class Debt{
             return result.rows;
         } catch (error){
             console.error('Error getting debt list: ', error);
-            throw error;
         }
     }
 
@@ -54,7 +52,6 @@ class Debt{
             return true;
         } catch (error) {
             console.error('Error updating debt:', error);
-            throw error;
         }
     }
 }

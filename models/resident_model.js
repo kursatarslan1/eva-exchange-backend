@@ -28,7 +28,6 @@ class Resident{
             return result.rows[0];
         } catch (error){
             console.error('Error executing create query: ', error);
-            throw error;
         }
     }
 
@@ -41,7 +40,6 @@ class Resident{
             return result.rows[0];
         } catch (error){
             console.error('Error executing findByEmail query: ', error);
-            throw error;
         }
     }
 
@@ -54,7 +52,6 @@ class Resident{
             return true;
         } catch (error){
             console.error('Error executing deactive query: ', error);
-            throw error;
         }
     }
 

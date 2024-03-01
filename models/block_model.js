@@ -16,7 +16,6 @@ class Block {
             return result.rows[0].block_id; // Tüm işlemler başarıyla tamamlandı
         } catch (error) {
             console.error('Error executing create query: ', error);
-            throw error;
         }
     }
 }

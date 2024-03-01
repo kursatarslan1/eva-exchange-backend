@@ -22,7 +22,6 @@ class License{
             return result.rows[0];
         } catch (error){
             console.error('Error creating license: ', error);
-            throw error;
         }
     } 
 
@@ -35,7 +34,6 @@ class License{
             return result.rows;                
         }  catch (error){
             console.error('Error getting license: ', error);
-            throw error;
         }
     }
 
@@ -56,7 +54,6 @@ class License{
             return assignResult.rows[0];
         } catch (error) {
             console.error('Error assigning license: ', error);
-            throw error;
         }
     }
 }

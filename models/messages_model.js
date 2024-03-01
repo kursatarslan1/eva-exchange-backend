@@ -18,7 +18,6 @@ class Messages{
           return { success: true, message: "Message sent successfully." };
         } catch (error) {
           console.error("Error sending message: ", error);
-          throw new Error("Internal Server Error");
         }
     }
       
@@ -136,7 +135,6 @@ class Messages{
             return result.rows;
         } catch (error) {
             console.error("Error fetching messages by user ID: ", error);
-            throw new Error("Internal Server Error");
         }
     }
     

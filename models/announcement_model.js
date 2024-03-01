@@ -18,7 +18,6 @@ class Announcement{
             return true;
         } catch (error){
             console.error('Error creating announcement: ', error);
-            throw error;
         }
     }
 
@@ -31,7 +30,6 @@ class Announcement{
             return announcements.rows;
         } catch (error) {
             console.error('Error getting announcements: ', error);
-            throw error;
         }
     }
 
@@ -44,7 +42,6 @@ class Announcement{
             return true;
         } catch (error){
             console.error('Error executing delete announcement: ', error);
-            throw error;
         }
     }
 }

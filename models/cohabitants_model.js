@@ -20,7 +20,6 @@ class Cohabitants{
             return result.rows[0];
         } catch (error) {
             console.error('Error executing create query: ', error);
-            throw error;
         }
     }
 
@@ -33,7 +32,6 @@ class Cohabitants{
             return result.rows;
         } catch (error) {
             console.error('Error getting cohabitants: ', error);
-            throw error;
         }
     }
 
@@ -46,7 +44,34 @@ class Cohabitants{
             return true;
         } catch (error) {
             console.error('Error executing delete query: ', error);
-            throw error;
+        }
+    }
+
+    static async updateCohabitants(cohabitants_id, first_name, last_name, phone_number, email){
+        try{
+            const updateFields = [
+                "first_name",
+                "last_name",
+                "phone_number",
+                "email"
+            ];
+
+            const updateValues = [
+                first_name, last_name, phone_number, email
+            ];
+
+            const queryText = `
+                UPDATE cohabitants 
+                SET ${updateFields.map((field, index) => `${field} = $${index + 1}`).join(", ")}
+                WHERE cohabitants_id = $${updateFields.length + 1} RETURNING *
+            `;
+
+            const values = [...updateValues, cohabitants_id];
+
+            const result = await client.query(queryText, values);
+            return result.rows[0];
+        } catch (error) {
+            console.error('Could not update cohabitant informations.');
         }
     }
 }

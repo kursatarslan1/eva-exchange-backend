@@ -46,4 +46,19 @@ async function deleteCohabitants(req,res){
     }
 }
 
-module.exports = { createCohabitants, findCohabitants, deleteCohabitants }
+async function updateCohabitants(req, res){
+    const { cohabitants_id, first_name, last_name, phone_number, email } = req.body;
+
+    try{
+        const result = await Cohabitants.updateCohabitants(cohabitants_id, first_name, last_name, phone_number, email);
+        if(!result){
+            return res.status(401).json({error: 'Cohabitant could not update.'})
+        }
+        res.json({result});
+    } catch (error) {
+        console.error('Manager could not update.');
+        res.status(500).json({ error: 'Manager could not update.' });
+    }
+}
+
+module.exports = { createCohabitants, findCohabitants, deleteCohabitants, updateCohabitants }

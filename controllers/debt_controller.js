@@ -7,12 +7,11 @@ async function create(req, res){
         const debtRes = await Debt.create(resident_id, apartment_id, block_id, unit_id, amount, created_at, payment_date, last_payment_date, description, status, debit_type);
 
         if(!debtRes){
-            throw new Error('Request or complaints creation failed');
+            console.error('Request or complaints creation failed');
         }
         res.json({ success: 'true' });
     } catch(error) {
         console.error('Unexpected error: ', error);
-        throw error;
     }
 }
 
@@ -24,7 +23,6 @@ async function getDebtList(req, res){
         res.json({result});
     } catch(error) {
         console.error('Unexpected error: ', error);
-        throw error;
     }
 }
 
@@ -36,7 +34,6 @@ async function updateDebt(req, res){
         res.json({ message: 'Update debt. '});
     } catch(error) {
         console.error('Unexpected error: ', error);
-        throw error;
     }
 }
 

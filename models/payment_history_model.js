@@ -21,7 +21,6 @@ class PaymentHistory{
             return true;
         } catch (error){
             console.error('Error creating debt: ', error);
-            throw error;
         }
     }
 
@@ -34,7 +33,6 @@ class PaymentHistory{
             return result.rows;
         } catch (error){
             console.error('Error getting payment history: ', error);
-            throw error;
         }
     }
 }
