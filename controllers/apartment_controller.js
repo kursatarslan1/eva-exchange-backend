@@ -67,4 +67,19 @@ async function getApartmentDetail(req, res){
     }
 }
 
-module.exports = { createApartment, getApartment, getApartmentDetail };
+async function updateApartment(req, res){
+    const { apartment_id, apartment_name, apartment_country, apartment_city, apartment_state, apartment_full_address, apartment_due_amount } = req.body;
+
+    try{
+        const result = await Apartment.updateApartmentInfo(apartment_id, apartment_name, apartment_country, apartment_city, apartment_state, apartment_full_address, apartment_due_amount);
+        if(!result){
+            return res.status(401).json({error: 'Apartment could not update'});
+        }
+        res.json({result});
+    } catch (error) {
+        console.error('Apartment could not update');
+        res.status(500).json({error: 'Apartment could not update.'});
+    }
+}
+
+module.exports = { createApartment, getApartment, getApartmentDetail, updateApartment };

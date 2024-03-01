@@ -13,7 +13,7 @@ async function getCountry(req, res){
 }
 
 async function getCity(req, res){
-    const { country_id } = req.body;
+    const { country_id } = req.query;
     try{
         const cityList = await City.Cities(country_id);
         res.json({cityList});
@@ -24,7 +24,7 @@ async function getCity(req, res){
 }
 
 async function getState(req, res){
-    const { city_id } = req.body;
+    const { city_id } = req.query;
     try{
         const stateList = await State.States(city_id);
         res.json({stateList});

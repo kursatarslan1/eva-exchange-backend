@@ -7,5 +7,7 @@ router.use(express.json());
 router.post('/login', managerController.login);
 router.post('/register', managerController.register);
 router.put('/deactive', managerController.deactive);
+router.get('/getInformationByEmail', managerController.getInformationByEmail);
+router.put('/updateManagerInfo', managerController.updateManager);
 
 module.exports = router;

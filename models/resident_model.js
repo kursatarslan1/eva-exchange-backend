@@ -57,6 +57,37 @@ class Resident{
             throw error;
         }
     }
+
+    static async UpdateResidentById(resident_id, first_name, last_name, phone_number, photo, country, city, state){
+        try{
+            const updateFields = [
+                "first_name",
+                "last_name",
+                "phone_number",
+                "photo",
+                "country",
+                "city",
+                "state"
+            ]
+
+            const updateValues = [
+                first_name, last_name, phone_number, photo, country, city, state
+            ];
+
+            const queryText = `
+                UPDATE residents 
+                SET ${updateFields.map((field, index) => `${field} = $${index + 1}`).join(", ")}
+                WHERE resident_id = $${updateFields.length + 1} RETURNING *
+            `;
+
+            const values = [...updateValues, resident_id];
+
+            const result = await client.query(queryText, values);
+            return result.rows[0];
+        } catch (error){
+            console.error('Yönetici bilgileri güncellenirken hata oluştu: ', error);
+        }
+    }
 }
 
 module.exports = { Resident };

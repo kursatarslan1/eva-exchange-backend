@@ -14,7 +14,7 @@ class Manager{
     }
 
     static async create(first_name, last_name, email, phone_number, photo, address, manager_role, record_status){
-        const queryText = 'INSERT INTO managers (first_name, last_name, email, phone_number, photo, address, manager_role, record_status) VALUES($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *';
+        const queryText = 'INSERT INTO managers (first_name, last_name, email, phone_number, photo, address, manager_role, record_status) VALUES($1,$2,$3,$4,$5,$6,$7,$8) RETURNING manager_id';
         const values = [first_name, last_name, email, phone_number, photo, address, manager_role, record_status];
 
         try{
@@ -51,6 +51,40 @@ class Manager{
             throw error;
         }
     }
+
+    static async UpdateManagerById(manager_id, first_name, last_name, phone_number, photo, address){
+        try {
+            const updateFields = [
+                "first_name",
+                "last_name",
+                "phone_number",
+                "photo",
+                "address"
+            ];
+    
+            const updateValues = [
+                first_name,
+                last_name,
+                phone_number,
+                photo,
+                address
+            ];
+    
+            const queryText = `
+                UPDATE managers 
+                SET ${updateFields.map((field, index) => `${field} = $${index + 1}`).join(", ")}
+                WHERE manager_id = $${updateFields.length + 1} RETURNING *
+            `;
+    
+            const values = [...updateValues, manager_id];
+    
+            const result = await client.query(queryText, values);
+            return result.rows[0];
+        } catch (error) {
+            console.error('Yönetici bilgileri güncellenirken hata oluştu: ', error);
+        }
+    }
+    
 }
 
 module.exports = { Manager };

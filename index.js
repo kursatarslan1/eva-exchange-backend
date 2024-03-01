@@ -21,6 +21,9 @@ app.use(express.json());
 app.use(cors());
 app.set('trust proxy', true);
 
+app.use(express.json({ limit: '50mb' })); // JSON veri boyutu sınırı
+app.use(express.urlencoded({ limit: '50mb', extended: true })); 
+
 app.use('/steyon/manager', managerRoutes); // is auth sor!
 app.use('/steyon/apartment', apartmentRoutes);
 app.use('/steyon/resident', residentRoutes);

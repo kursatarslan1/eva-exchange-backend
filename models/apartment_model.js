@@ -106,6 +106,36 @@ class Apartment{
             console.error('Error getting relation apartment: ', error);
         }
     }
+
+    static async updateApartmentInfo(apartment_id, apartment_name, apartment_country, apartment_city, apartment_state, apartment_full_address, apartment_due_amount){
+        try{
+            const updateFields = [
+                "apartment_name",
+                "apartment_country",
+                "apartment_city",
+                "apartment_state",
+                "apartment_full_address",
+                "apartment_due_amount"
+            ]
+
+            const updateValues = [
+                apartment_name, apartment_country, apartment_city, apartment_state, apartment_full_address, apartment_due_amount
+            ];
+
+            const queryText = `
+                UPDATE apartment 
+                SET ${updateFields.map((field, index) => `${field} = $${index + 1}`).join(", ")}
+                WHERE apartment_id = $${updateFields.length + 1} RETURNING *
+            `;
+
+            const values = [...updateValues, apartment_id];
+
+            const result = await client.query(queryText, values);
+            return result.rows[0];
+        } catch (error) {
+            console.error('Yönetici bilgileri güncellenirken hata oluştu: ', error);
+        }
+    }
 }
 
 function generateApartmentId() {

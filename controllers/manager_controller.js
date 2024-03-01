@@ -59,6 +59,18 @@ async function login(req, res) {
     }
 }
 
+async function getInformationByEmail(req, res){
+    const { email }  = req.body;
+
+    try{
+        const result = await Manager.findByEmail(email);
+        return res.json({result});
+    } catch (error){
+        console.error('Login error: ' + error);
+        res.status(500).json({ error: 'Cannot get manager info' });
+    }
+}
+
 async function deactive(req, res) {
     const { manager_id } = req.body;
     try{
@@ -75,8 +87,25 @@ async function deactive(req, res) {
     }
 }
 
+async function updateManager(req, res){
+    const { manager_id, first_name, last_name, phone_number, photo, address } = req.body;
+
+    try{
+        const result = await Manager.UpdateManagerById(manager_id, first_name, last_name, phone_number, photo, address);
+        if(!result){
+            return res.status(401).json({error: 'Manager could not update.'})
+        }
+        res.json({result});
+    } catch (error) {
+        console.error('Manager could not update.');
+        res.status(500).json({ error: 'Manager could not update.' });
+    }
+}
+
 module.exports = {
     login,
     register,
-    deactive
+    deactive,
+    getInformationByEmail,
+    updateManager
 };

@@ -15,7 +15,6 @@ class Country{
             return result.rows;
         } catch (error) {
             console.error('Error getting country list: ', error);
-            throw error;
         }
     }
 }
@@ -35,7 +34,6 @@ class City{
             return result.rows;
         } catch (error) {
             console.error('Error gettin city list: ', error);
-            throw error;
         }
     } 
 }
@@ -55,7 +53,6 @@ class State{
            return result.rows;
         } catch (error) {
             console.error('Error getting state list: ', error);
-            throw error;
         }
     }
 }
