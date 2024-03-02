@@ -9,5 +9,6 @@ router.post('/register', managerController.register);
 router.put('/deactive', managerController.deactive);
 router.get('/getInformationByEmail', managerController.getInformationByEmail);
 router.put('/updateManagerInfo', managerController.updateManager);
+router.post('/tokenisvalid', managerController.tokenIsValid);
 
 module.exports = router;

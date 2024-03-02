@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { Manager } = require('../models/manager_model');
 const { Password } = require('../models/password_model');
+const checkTokenValidity = require('../helpers/check_token_validity');
 
 async function register(req, res) {
     const { first_name, last_name, password, email, phone_number, photo, address, manager_role, record_status } = req.body;
@@ -102,10 +103,26 @@ async function updateManager(req, res){
     }
 }
 
+async function tokenIsValid(req, res) {
+    const { token } = req.body;
+
+    try {
+        const tokenValid = await checkTokenValidity(token);
+        if (tokenValid)
+            res.status(200).json({ message: 'Token is valid', status: true });
+        else
+            res.status(200).json({ message: 'Invalid token', status: false });
+
+    } catch (error) {
+        res.status(200).json({ message: 'Invalid token', status: false });
+    }
+}
+
 module.exports = {
     login,
     register,
     deactive,
     getInformationByEmail,
-    updateManager
+    updateManager,
+    tokenIsValid
 };
