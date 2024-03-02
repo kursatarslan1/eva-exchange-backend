@@ -8,5 +8,7 @@ router.post('/createApartment', apartmentController.createApartment);
 router.get('/getApartment', apartmentController.getApartment);
 router.get('/getApartmentDetail', apartmentController.getApartmentDetail);
 router.put('/updateApartment', apartmentController.updateApartment);
+router.get('/getBlockInfo', apartmentController.getBlockInfoByApartmentId);
+router.get('/getUnitInfo', apartmentController.getUnitInfoByBlockId)
 
 module.exports = router;

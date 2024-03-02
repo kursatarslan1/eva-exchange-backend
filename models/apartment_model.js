@@ -136,6 +136,30 @@ class Apartment{
             console.error('Yönetici bilgileri güncellenirken hata oluştu: ', error);
         }
     }
+
+    static async getBlockInfoByApartmentId(apartment_id){
+        const queryText = 'SELECT * FROM blocks WHERE apartment_id = $1';
+        const values = [apartment_id];
+
+        try{
+            const result = await client.query(queryText, values);
+            return result.rows;
+        } catch (error) {
+            console.error('Blok bilgileri alınırken hata oluştu: ', error);
+        }
+    }
+
+    static async getUnitInfoByBlockId(block_id){
+        const queryText = 'SELECT * FROM units WHERE block_id = $1';
+        const values = [block_id];
+
+        try{
+            const result = await client.query(queryText, values);
+            return result.rows;
+        } catch (error) {
+            console.error('Daire bilgileri alınırken hata oluştu: ', error);
+        }
+    }
 }
 
 function generateApartmentId() {

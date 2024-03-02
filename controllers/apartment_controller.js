@@ -82,4 +82,28 @@ async function updateApartment(req, res){
     }
 }
 
-module.exports = { createApartment, getApartment, getApartmentDetail, updateApartment };
+async function getBlockInfoByApartmentId(req, res){
+    const { apartment_id } = req.query;
+
+    try{
+        const result = await Apartment.getBlockInfoByApartmentId(apartment_id);
+        res.json({result});
+    } catch (error) {
+        console.error('Blok bilgileri alınamadı.', error);
+        res.status(400).json({error: 'Blok bilgileri alınamadı.'});
+    }
+}
+
+async function getUnitInfoByBlockId(req, res){
+    const { block_id } = req.query;
+
+    try{
+        const result = await Apartment.getUnitInfoByBlockId(block_id);
+        res.json({result});
+    } catch (error) {
+        console.error('Daire bilgileri alınamadı.', error);
+        res.status(400).json({error: 'Daire bilgileri alınamadı.'});
+    }
+}
+
+module.exports = { createApartment, getApartment, getApartmentDetail, updateApartment, getBlockInfoByApartmentId, getUnitInfoByBlockId };
