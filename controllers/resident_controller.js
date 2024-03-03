@@ -51,7 +51,7 @@ async function login(req, res) {
 
         const token = jwt.sign({ resident }, process.env.JWT_SECRET);
 
-        res.json({ token });
+        res.json({ resident, token });
     } catch (error) {
         console.error('Login error: ' + error);
         res.status(500).json({ error: 'Login unsuccessful' });
