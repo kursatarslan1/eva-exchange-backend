@@ -18,9 +18,9 @@ async function sendMessage(req, res) {
 }
 
 async function getAllMessages(req, res){
-
+    const { user_id_1, user_id_2 } = req.query;
     try{
-        const getAllMessages = await Messages.getAllMessages(req);
+        const getAllMessages = await Messages.getAllMessages(user_id_1, user_id_2);
         res.json({getAllMessages});
     } catch (error){
         console.error('Unexpected error: ', error);
@@ -29,7 +29,7 @@ async function getAllMessages(req, res){
 }
 
 async function getMessagesByUserId(req, res){
-    const {user_id} = req.body;
+    const {user_id} = req.query;
 
     try{
         const message = await Messages.getMessagesByUserId(user_id);

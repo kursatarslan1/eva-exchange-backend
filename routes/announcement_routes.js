@@ -5,7 +5,7 @@ const isAuthenticated = require('../middleware/auth');
 
 router.use(express.json());
 
-router.post('/create', isAuthenticated, announcementController.createAnnouncement);
+router.post('/create', announcementController.createAnnouncement);
 router.get('/getAnnouncementList', announcementController.getAnnouncementList);
 router.delete('/deleteAnnouncement', announcementController.deleteAnnouncement);
 

@@ -18,7 +18,7 @@ async function createCohabitants(req, res){
 }
 
 async function findCohabitants(req, res){
-    const { dependent_resident_id } = req.body;
+    const { dependent_resident_id } = req.query;
 
     try{
         const cohabitants = await Cohabitants.findByResidentId(dependent_resident_id);
@@ -30,7 +30,7 @@ async function findCohabitants(req, res){
 }
 
 async function deleteCohabitants(req,res){
-    const { cohabitant_id } = req.body;
+    const { cohabitant_id } = req.query;
 
     try{
         const deleteResult = await Cohabitants.deleteCohabitants(cohabitant_id);

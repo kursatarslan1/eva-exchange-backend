@@ -15,7 +15,7 @@ async function createAnnouncement(req, res){
 }
 
 async function getAnnouncementList(req, res) {
-    const { apartment_id } = req.body;
+    const { apartment_id } = req.query;
 
     try{
         const announcementList = await Announcement.getAnnouncements(apartment_id);
@@ -26,7 +26,7 @@ async function getAnnouncementList(req, res) {
 }
 
 async function deleteAnnouncement(req, res){
-    const { announcement_id } = req.body;
+    const { announcement_id } = req.query;
 
     try{
         const deleteAnnouncement = await Announcement.deleteAnnouncement(announcement_id);

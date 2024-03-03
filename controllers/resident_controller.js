@@ -59,7 +59,7 @@ async function login(req, res) {
 }
 
 async function getInformationByEmail(req, res){
-    const { email }  = req.body;
+    const { email }  = req.query;
 
     try{
         const result = await Resident.findByEmail(email);
@@ -71,7 +71,7 @@ async function getInformationByEmail(req, res){
 }
 
 async function deactive(req, res) {
-    const { resident_id } = req.body;
+    const { resident_id } = req.query;
     try{
         const resident = await Resident.DeactiveAccount(resident_id);
 

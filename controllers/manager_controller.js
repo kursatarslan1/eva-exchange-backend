@@ -61,7 +61,7 @@ async function login(req, res) {
 }
 
 async function getInformationByEmail(req, res){
-    const { email }  = req.body;
+    const { email }  = req.query;
 
     try{
         const result = await Manager.findByEmail(email);
@@ -73,7 +73,7 @@ async function getInformationByEmail(req, res){
 }
 
 async function deactive(req, res) {
-    const { manager_id } = req.body;
+    const { manager_id } = req.query;
     try{
         const manager = await Manager.DeactiveAccount(manager_id);
 

@@ -73,7 +73,7 @@ class Messages{
 
       
     static getMessagesFromConversation = async (conversationId) => {
-        const query = 7`
+        const query = `
             SELECT cm.conversation_id, m.content, m.timestamp, 
             CASE 
                 WHEN u1.manager_id IS NOT NULL THEN u1.first_name || ' ' || u1.last_name
@@ -91,21 +91,19 @@ class Messages{
         return result.rows;
     };
       
-    static async getAllMessages(req, res) {
-        const { user_id_1, user_id_2 } = req.body;
+    static async getAllMessages(user_id_1, user_id_2) {
       
         try {
           const conversationId = await this.getConversationId(user_id_1, user_id_2);
       
           if (!conversationId) {
-            res.json([]);
+            return [];
           } else {
             const messages = await this.getMessagesFromConversation(conversationId);
             return messages;
           }
         } catch (error) {
           console.error("Error fetching messages: ", error);
-          res.status(500).json({ error: "Internal Server Error" });
         }
     }
     

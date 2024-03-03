@@ -17,7 +17,7 @@ async function createPayment(req, res){
 }
 
 async function getPaymentHistory(req, res){
-    const { resident_id } = req.body;
+    const { resident_id } = req.query;
 
     try{
         const result = await PaymentHistory.getPaymentHistoryById(resident_id);

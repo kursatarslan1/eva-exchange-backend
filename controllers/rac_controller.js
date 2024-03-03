@@ -16,7 +16,7 @@ async function createRac(req, res){
 }
 
 async function getRacList(req, res){
-    const { apartment_id } = req.body;
+    const { apartment_id } = req.query;
 
     try{
         const racList = await RequestsAndComplaints.getRac(apartment_id);
@@ -27,7 +27,7 @@ async function getRacList(req, res){
 }
 
 async function deleteRac(req, res){
-    const { rac_id } = req.body;
+    const { rac_id } = req.query;
 
     try{
         const deleteRes = await RequestsAndComplaints.deleteRac(rac_id);

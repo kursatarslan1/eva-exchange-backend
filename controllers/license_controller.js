@@ -12,7 +12,7 @@ async function create(req, res){
 }
 
 async function getLicenseByApartmentId(req, res){
-    const { apartment_id } = req.body;
+    const { apartment_id } = req.query;
 
     try{
         const getLicenseResult = await License.getLicenseKey(apartment_id);

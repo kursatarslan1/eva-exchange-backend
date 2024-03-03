@@ -16,7 +16,7 @@ async function create(req, res){
 }
 
 async function getDebtList(req, res){
-    const { resident_id } = req.body;
+    const { resident_id } = req.query;
 
     try{
         const result = await Debt.getDebtListByResidentId(resident_id);
@@ -27,7 +27,7 @@ async function getDebtList(req, res){
 }
 
 async function updateDebt(req, res){
-    const { debt_id } = req.body;
+    const { debt_id } = req.query;
 
     try{
         await Debt.PayDebt(debt_id);
