@@ -67,6 +67,18 @@ async function getApartmentDetail(req, res){
     }
 }
 
+async function getApartmentDetailById(req, res){
+    const { apartment_id } = req.query;
+
+    try{
+        const apartmentDetail = await Apartment.getApartmentDetailById(apartment_id);
+        res.json({apartmentDetail});
+    } catch (error) {
+        console.error('get error: ' + error);
+        res.status(500).json({ error: 'get apartment unsuccessful' });
+    }
+}
+
 async function updateApartment(req, res){
     const { apartment_id, apartment_name, apartment_country, apartment_city, apartment_state, apartment_full_address, apartment_due_amount } = req.body;
 
@@ -106,4 +118,4 @@ async function getUnitInfoByBlockId(req, res){
     }
 }
 
-module.exports = { createApartment, getApartment, getApartmentDetail, updateApartment, getBlockInfoByApartmentId, getUnitInfoByBlockId };
+module.exports = { createApartment, getApartment, getApartmentDetail, updateApartment, getBlockInfoByApartmentId, getUnitInfoByBlockId, getApartmentDetailById };

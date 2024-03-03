@@ -50,6 +50,63 @@ class Apartment{
         }
     }
 
+    static async getApartmentDetailById(apartment_id){
+        const queryText = `
+        SELECT
+            ai.apartment_id,
+            ai.apartment_name,
+            ai.apartment_country,
+            ai.apartment_city,
+            ai.apartment_state,
+            ai.apartment_full_address,
+            ai.apartment_due_amount,
+            ai.apartment_license,
+            json_agg(
+                json_build_object(
+                    'block_id', abi.block_id,
+                    'block_name', abi.block_name,
+                    'units', (
+                        SELECT json_agg(
+                            json_build_object(
+                                'unit_id', unit.unit_id,
+                                'unit_number', unit.unit_number
+                            )
+                        )
+                        FROM units unit
+                        WHERE unit.block_id = abi.block_id
+                    )
+                )
+            ) AS blocks
+        FROM
+            manager_apartment_relation mar
+        JOIN
+            apartment ai ON mar.apartment_id = ai.apartment_id
+        LEFT JOIN (
+            SELECT DISTINCT apartment_id, block_id, block_name
+            FROM blocks
+        ) abi ON ai.apartment_id = abi.apartment_id
+        WHERE
+            ai.apartment_id = $1
+        GROUP BY
+            ai.apartment_id,
+            ai.apartment_name,
+            ai.apartment_country,
+            ai.apartment_city,
+            ai.apartment_state,
+            ai.apartment_full_address,
+            ai.apartment_due_amount,
+            ai.apartment_license;
+    `;
+        const values = [apartment_id];
+
+        try{
+            const result = await client.query(queryText, values);
+            return result.rows[0];
+        } catch (error){
+            console.error('Error getting relation apartment: ', error);
+        }
+    }
+
     static async getApartmentDetail(manager_id, apartment_id){
         const queryText = `
         SELECT
