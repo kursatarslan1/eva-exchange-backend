@@ -103,10 +103,23 @@ async function updateResident(req, res){
     }
 }
 
+async function GetAllResidentByApartmentId(req, res){
+    const { apartment_id } = req.query;
+
+    try{
+        const result = await Resident.GetAllResidentByApartmentId(apartment_id);
+        res.json({result});
+    } catch (error) {
+        console.error('Cannot get residents: ', error);
+        res.status(500).json({error: 'Cannot get residents.'})
+    }
+}
+
 module.exports = {
     login,
     register,
     deactive,
     getInformationByEmail,
-    updateResident
+    updateResident,
+    GetAllResidentByApartmentId
 };

@@ -9,5 +9,6 @@ router.post('/register', residentController.register);
 router.put('/deactive', residentController.deactive);
 router.get('/getInformationByEmail', residentController.getInformationByEmail);
 router.put('/updateResidentInfo', residentController.updateResident);
+router.get('/getAllResident', residentController.GetAllResidentByApartmentId);
 
 module.exports = router;

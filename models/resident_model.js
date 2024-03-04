@@ -85,6 +85,18 @@ class Resident{
             console.error('Yönetici bilgileri güncellenirken hata oluştu: ', error);
         }
     }
+
+    static async GetAllResidentByApartmentId(apartment_id){
+        const queryText = 'SELECT * FROM residents WHERE apartment_id = $1;';
+        const values = [apartment_id];
+
+        try{
+            const result = await client.query(queryText, values);
+            return result.rows;
+        } catch (error){
+            console.log('Cannot get residents: ', error);
+        }
+    }
 }
 
 module.exports = { Resident };
