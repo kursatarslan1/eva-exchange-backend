@@ -7,5 +7,6 @@ router.use(express.json());
 router.post('/create', racController.createRac);
 router.get('/getRacList', racController.getRacList);
 router.delete('/deleteRac', racController.deleteRac);
+router.put('/updateRac', racController.updateRac)
 
 module.exports = router;

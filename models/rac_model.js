@@ -26,8 +26,8 @@ class RequestsAndComplaints{
     }
 
     static async getRac(apartment_id){
-        const queryText = 'SELECT * FROM requests_and_complaints WHERE apartment_id = $1';
-        const values = [apartment_id];
+        const queryText = 'SELECT * FROM requests_and_complaints WHERE apartment_id = $1 AND status IS DISTINCT FROM $2;';
+        const values = [apartment_id, 3];
 
         try{
             const result = await client.query(queryText, values);
@@ -46,6 +46,18 @@ class RequestsAndComplaints{
             return true;
         }catch (error){
             console.error('Error deleting request or complaints: ', error);
+        }
+    }
+
+    static async updateRac(rac_id, status){
+        const queryText = 'UPDATE requests_and_complaints SET status = $1 WHERE rac_id = $2';
+        const values = [status, rac_id];
+
+        try{
+            await client.query(queryText, values);
+            return true;
+        } catch (error) {
+            console.log('Error updating rac: ', error);
         }
     }
 }
