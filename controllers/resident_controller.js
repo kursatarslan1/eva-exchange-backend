@@ -4,7 +4,7 @@ const { Resident } = require('../models/resident_model');
 const { Password } = require('../models/password_model');
 
 async function register(req, res) {
-    const { password, status, first_name, last_name, phone_number, apartment_id, block_id, unit_id, email, tenant, photo, country, city, state, record_status } = req.body;
+    const { password, first_name, last_name, phone_number, apartment_id, block_id, unit_id, email, tenant, photo, country, city, state, record_status } = req.body;
 
     try{
         // E-posta adresiyle kullanıcı araması yap
@@ -15,7 +15,7 @@ async function register(req, res) {
             return res.status(400).json({ error: 'User with this email already exists.' });
         }
         
-        const userResult = await Resident.create(status, first_name, last_name, phone_number, apartment_id, block_id, unit_id, email, tenant, photo, country, city, state, record_status);
+        const userResult = await Resident.create('P', first_name, last_name, phone_number, apartment_id, block_id, unit_id, email, tenant, photo, country, city, state, record_status);
 
         const hashedPassword = await bcrypt.hash(password, 10); 
         await Password.create(userResult.resident_id, hashedPassword, 'H');
