@@ -4,9 +4,9 @@ const { Resident } = require('../models/resident_model');
 const { Password } = require('../models/password_model');
 
 async function register(req, res) {
-    const { password, first_name, last_name, phone_number, apartment_id, block_id, unit_id, email, tenant, photo, country, city, state, record_status } = req.body;
+    const { password, first_name, last_name, phone_number, apartment_id, block_id, unit_id, email, tenant, photo, country, city, state, record_status, address } = req.body;
 
-    try{
+    try {
         // E-posta adresiyle kullanıcı araması yap
         const existingUser = await Resident.findByEmail(email);
 
@@ -14,14 +14,14 @@ async function register(req, res) {
         if (existingUser) {
             return res.status(400).json({ error: 'User with this email already exists.' });
         }
-        
-        const userResult = await Resident.create('P', first_name, last_name, phone_number, apartment_id, block_id, unit_id, email, tenant, photo, country, city, state, record_status);
 
-        const hashedPassword = await bcrypt.hash(password, 10); 
+        const userResult = await Resident.create('P', first_name, last_name, phone_number, apartment_id, block_id, unit_id, email, tenant, photo, country, city, state, record_status, address);
+
+        const hashedPassword = await bcrypt.hash(password, 10);
         await Password.create(userResult.resident_id, hashedPassword, 'H');
 
-        res.json({message: 'User registered successfully.'});
-    } catch (error){
+        res.json({ message: 'User registered successfully.' });
+    } catch (error) {
         console.error('Error register: ' + error);
         res.status(500).json({ error: 'User not created' });
     }
@@ -58,13 +58,13 @@ async function login(req, res) {
     }
 }
 
-async function getInformationByEmail(req, res){
-    const { email }  = req.query;
+async function getInformationByEmail(req, res) {
+    const { email } = req.query;
 
-    try{
+    try {
         const result = await Resident.findByEmail(email);
-        return res.json({result});
-    } catch (error){
+        return res.json({ result });
+    } catch (error) {
         console.error('Login error: ' + error);
         res.status(500).json({ error: 'Cannot get manager info' });
     }
@@ -72,14 +72,14 @@ async function getInformationByEmail(req, res){
 
 async function deactive(req, res) {
     const { resident_id } = req.query;
-    try{
+    try {
         const resident = await Resident.DeactiveAccount(resident_id);
 
-        if(!manager) {
+        if (!manager) {
             return res.status(401).json({ error: 'Resident not found' });
         }
 
-        const token = jwt.sign({ userId: resident.resident_id}, process.env.JWT_SECRET);
+        const token = jwt.sign({ userId: resident.resident_id }, process.env.JWT_SECRET);
 
         res.json({ token });
     } catch (error) {
@@ -88,30 +88,72 @@ async function deactive(req, res) {
     }
 }
 
-async function updateResident(req, res){
+async function updateResident(req, res) {
     const { resident_id, first_name, last_name, phone_number, photo, country, city, state } = req.body;
 
-    try{
+    try {
         const result = await Resident.UpdateResidentById(resident_id, first_name, last_name, phone_number, photo, country, city, state);
-        if(!result){
-            return res.status(401).json({error: 'Resident could not update.'});
+        if (!result) {
+            return res.status(401).json({ error: 'Resident could not update.' });
         }
-        res.json({result});
-    } catch (error){
+        res.json({ result });
+    } catch (error) {
         console.error('Manager could not update.');
         res.status(500).json({ error: 'Manager could not update.' });
     }
 }
 
-async function GetAllResidentByApartmentId(req, res){
+async function GetAllResidentByApartmentId(req, res) {
     const { apartment_id } = req.query;
 
-    try{
+    try {
         const residents = await Resident.GetAllResidentByApartmentId(apartment_id);
-        res.json({residents});
+        res.json({ residents });
     } catch (error) {
         console.error('Cannot get residents: ', error);
-        res.status(500).json({error: 'Cannot get residents.'})
+        res.status(500).json({ error: 'Cannot get residents.' })
+    }
+}
+
+async function GetAllWaitingApprovalResidents(req, res) {
+    const { apartment_id } = req.query;
+
+    try {
+        const result = await Resident.GetAllWaitingApprovalResidents(apartment_id);
+        if (result)
+            res.json({ result })
+        else
+            res.json({ success: 'false' })
+    } catch (error){
+        res.status(500).json({ error: 'Cannot get residents.' })
+    }
+}
+
+async function ApproveResident(req, res){
+    const { resident_id } = req.query;
+
+    try{
+        const result = await Resident.ApproveResident(resident_id);
+        if (result)
+            res.json({ success: 'true' })
+        else
+            res.json({ success: 'false' })
+    } catch (error){
+        res.status(500).json({ error: 'Cannot approve resident.' })
+    }
+}
+
+async function RejectResident(req, res){
+    const { resident_id } = req.query;
+
+    try{
+        const result = await Resident.RejectResident(resident_id);
+        if (result)
+            res.json({ success: 'true' })
+        else
+            res.json({ success: 'false' })
+    } catch (error){
+        res.status(500).json({ error: 'Cannot reject resident.' })
     }
 }
 
@@ -121,5 +163,8 @@ module.exports = {
     deactive,
     getInformationByEmail,
     updateResident,
-    GetAllResidentByApartmentId
+    GetAllResidentByApartmentId,
+    GetAllWaitingApprovalResidents,
+    ApproveResident,
+    RejectResident
 };

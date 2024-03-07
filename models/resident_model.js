@@ -19,9 +19,9 @@ class Resident{
         this.record_status = record_status;
     }
 
-    static async create(status, first_name, last_name, phone_number, apartment_id, block_id, unit_id, email, tenant, photo, country, city, state, record_status){
-        const queryText = 'INSERT INTO residents (status, first_name, last_name, phone_number, apartment_id, block_id, unit_id, email, tenant, photo, country, city, state, record_status) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING resident_id'
-        const values = [status, first_name, last_name, phone_number, apartment_id, block_id, unit_id, email, tenant, photo, country, city, state, record_status]
+    static async create(status, first_name, last_name, phone_number, apartment_id, block_id, unit_id, email, tenant, photo, country, city, state, record_status, address){
+        const queryText = 'INSERT INTO residents (status, first_name, last_name, phone_number, apartment_id, block_id, unit_id, email, tenant, photo, country, city, state, record_status, address) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) RETURNING resident_id'
+        const values = [status, first_name, last_name, phone_number, apartment_id, block_id, unit_id, email, tenant, photo, country, city, state, record_status, address]
         
         try{
             const result = await client.query(queryText, values);
@@ -87,14 +87,50 @@ class Resident{
     }
 
     static async GetAllResidentByApartmentId(apartment_id){
-        const queryText = 'SELECT * FROM residents WHERE apartment_id = $1;';
-        const values = [apartment_id];
+        const queryText = 'SELECT * FROM residents WHERE apartment_id = $1 AND status = $2;';
+        const values = [apartment_id, 'A'];
 
         try{
             const result = await client.query(queryText, values);
             return result.rows;
         } catch (error){
             console.log('Cannot get residents: ', error);
+        }
+    }
+
+    static async GetAllWaitingApprovalResidents(apartment_id) {
+        const queryText = 'SELECT * FROM residents WHERE apartment_id = $1 AND status = $2';
+        const values = [apartment_id, 'P'];
+
+        try{
+            const result = await client.query(queryText, values);
+            return result.rows;
+        } catch (error) {
+            console.log('Onayda bekleyen kullanıcılar getirilirken bir hata oluştu.')
+        }
+    }
+    
+    static async ApproveResident(resident_id) {
+        const queryText = 'UPDATE residents SET status = $1 WHERE resident_id = $2';
+        const values = ['A', resident_id];
+
+        try{
+            await client.query(queryText, values);
+            return true;
+        } catch (error) {
+            console.log('Kullanıcı onaylanırken bir hata oluştu: ', error);
+        }
+    }
+
+    static async RejectResident(resident_id){
+        const queryText = 'UPDATE residents SET status = $1 WHERE resident_id = $2';
+        const values = ['R', resident_id];
+
+        try{
+            await client.query(queryText, values);
+            return true;
+        } catch (error) {
+            console.log('Kullanıcı reddedilirken bir hata oluştu: ', error);
         }
     }
 }
