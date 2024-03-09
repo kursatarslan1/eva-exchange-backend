@@ -87,8 +87,8 @@ class Resident{
     }
 
     static async GetAllResidentByApartmentId(apartment_id){
-        const queryText = 'SELECT * FROM residents WHERE apartment_id = $1 AND status = $2;';
-        const values = [apartment_id, 'A'];
+        const queryText = 'SELECT * FROM residents WHERE apartment_id = $1 AND status = $2 AND record_status = $3;';
+        const values = [apartment_id, 'A', 'A'];
 
         try{
             const result = await client.query(queryText, values);

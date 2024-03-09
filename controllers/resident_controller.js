@@ -71,17 +71,15 @@ async function getInformationByEmail(req, res) {
 }
 
 async function deactive(req, res) {
-    const { resident_id } = req.query;
+    const { resident_id } = req.body;
     try {
         const resident = await Resident.DeactiveAccount(resident_id);
 
-        if (!manager) {
+        if (!resident) {
             return res.status(401).json({ error: 'Resident not found' });
         }
 
-        const token = jwt.sign({ userId: resident.resident_id }, process.env.JWT_SECRET);
-
-        res.json({ token });
+        res.json({ success: 'true' });
     } catch (error) {
         console.error('Deactive error: ' + error);
         res.status(500).json({ error: 'Deactive account unsuccessful' });
@@ -130,7 +128,7 @@ async function GetAllWaitingApprovalResidents(req, res) {
 }
 
 async function ApproveResident(req, res){
-    const { resident_id } = req.query;
+    const { resident_id } = req.body;
 
     try{
         const result = await Resident.ApproveResident(resident_id);
@@ -144,7 +142,7 @@ async function ApproveResident(req, res){
 }
 
 async function RejectResident(req, res){
-    const { resident_id } = req.query;
+    const { resident_id } = req.body;
 
     try{
         const result = await Resident.RejectResident(resident_id);
