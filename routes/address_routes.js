@@ -7,5 +7,6 @@ router.use(express.json());
 router.get('/getCountry', addressController.getCountry);
 router.get('/getCity', addressController.getCity);
 router.get('/getState', addressController.getState);
+router.get('/getCityByName', addressController.getCityByName);
 
 module.exports = router;

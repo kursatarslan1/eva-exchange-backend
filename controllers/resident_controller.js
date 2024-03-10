@@ -107,8 +107,8 @@ async function GetAllResidentByApartmentId(req, res){
     const { apartment_id } = req.query;
 
     try{
-        const residents = await Resident.GetAllResidentByApartmentId(apartment_id);
-        res.json({residents});
+        const result = await Resident.GetAllResidentByApartmentId(apartment_id);
+        res.json({result});
     } catch (error) {
         console.error('Cannot get residents: ', error);
         res.status(500).json({error: 'Cannot get residents.'})
