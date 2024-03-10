@@ -40,4 +40,15 @@ async function deleteRac(req, res){
     }
 }
 
-module.exports = { createRac, getRacList, deleteRac };
+async function updateRac(req, res){
+    const { rac_id, status } = req.body;
+
+    try{
+        const updateRes = await RequestsAndComplaints.updateRac(rac_id, status);
+        res.json({ success: 'true' });
+    } catch (error) {
+        console.log('Cannot update requests or complaints: ', error);
+    }
+}
+
+module.exports = { createRac, getRacList, deleteRac, updateRac };
