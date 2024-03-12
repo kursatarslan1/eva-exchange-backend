@@ -111,14 +111,32 @@ class Resident{
     }
     
     static async ApproveResident(resident_id) {
-        const queryText = 'UPDATE residents SET status = $1 WHERE resident_id = $2';
+        const queryText = 'UPDATE residents SET status = $1 WHERE resident_id = $2 RETURNING *';
         const values = ['A', resident_id];
 
         try{
-            await client.query(queryText, values);
-            return true;
+            const resident = await client.query(queryText, values);
+            if(resident){
+                await this.AddResidentToUnits(resident.rows[0]);
+                return true;
+            }
         } catch (error) {
             console.log('Kullanıcı onaylanırken bir hata oluştu: ', error);
+        }
+    }
+
+    static async AddResidentToUnits(resident){
+        const fullName = `${resident.first_name} ${resident.last_name}`; 
+        const queryText = 'UPDATE units SET is_using = $1, resident_name = $2 WHERE unit_id = $3';
+        const values = ['E', fullName, resident.unit_id];
+
+        try{
+            const result = await client.query(queryText, values);
+            if(result){
+                return true;
+            }
+        } catch (error) {
+            console.log('Konut sakini bilgileri daireye yazılırken bir hata oluştu: ', error);
         }
     }
 

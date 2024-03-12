@@ -35,6 +35,24 @@ class Cohabitants{
         }
     }
 
+    static async findByUnitId(unit_id) {
+        const queryText = 'SELECT resident_id FROM residents WHERE unit_id = $1';
+        const values = [unit_id];
+
+        try{
+            const result = await client.query(queryText, values);
+            if(result) {
+                const cohabitantsQuery = 'SELECT * FROM cohabitants WHERE dependent_resident_id = $1';
+                const values = [result.rows[0].resident_id];
+                
+                const cohabitants = await client.query(cohabitantsQuery, values);
+                return cohabitants.rows;
+            }
+        } catch (error) {
+            console.log('Konut sakini bilgileri alınırken bir hata ile karşılaşıldı.');
+        }
+    }
+
     static async deleteCohabitants(cohabitants_id){
         const queryText = 'UPDATE cohabitants SET record_status = $1 WHERE cohabitants_id = $2';
         const values = ['P', cohabitants_id];

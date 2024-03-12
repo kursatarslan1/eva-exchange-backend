@@ -29,6 +29,18 @@ async function findCohabitants(req, res){
     }
 }
 
+async function findCohabitantByUnitId(req ,res){
+    const { unit_id } = req.query;
+
+    try{
+        const cohabitants = await Cohabitants.findByUnitId(unit_id);
+        res.json({cohabitants});
+    } catch (error) {
+        console.log('Cohabitant bilgileri alınırken bir hata oluştu: ', error);
+        res.status(500).json({ error: 'Unexpected error' });
+    }
+}
+
 async function deleteCohabitants(req,res){
     const { cohabitant_id } = req.query;
 
@@ -61,4 +73,4 @@ async function updateCohabitants(req, res){
     }
 }
 
-module.exports = { createCohabitants, findCohabitants, deleteCohabitants, updateCohabitants }
+module.exports = { createCohabitants, findCohabitants, deleteCohabitants, updateCohabitants, findCohabitantByUnitId }
