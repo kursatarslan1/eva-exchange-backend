@@ -69,7 +69,10 @@ class Apartment{
                         SELECT json_agg(
                             json_build_object(
                                 'unit_id', unit.unit_id,
-                                'unit_number', unit.unit_number
+                                'unit_number', unit.unit_number,
+                                'is_using', unit.is_using,
+                                'resident_name', unit.resident_name,
+                                'notes', unit.notes
                             )
                         )
                         FROM units unit

@@ -29,7 +29,7 @@ class City{
     static async Cities(country_id){
         try{
             const queryText = 'SELECT * FROM states WHERE country_id = $1';
-            const values = [country_id.id];
+            const values = [country_id];
             const result = await client.query(queryText, values);
             return result.rows;
         } catch (error) {
@@ -42,7 +42,7 @@ class City{
             const queryText = 'SELECT id FROM countries WHERE name = $1';
             const values = [country_name];
             const result = await client.query(queryText, values);
-            return this.Cities(result.rows[0]); // will be tested
+            return this.Cities(result.rows[0]); // will be testes
         } catch (con) {
             console.error('Error gettin city list: ', error);
         }

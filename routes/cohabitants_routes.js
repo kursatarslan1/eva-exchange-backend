@@ -6,6 +6,7 @@ router.use(express.json());
 
 router.post('/create', cohabitantController.createCohabitants);
 router.get('/getCohabitants', cohabitantController.findCohabitants);
+router.get('/getCohabitantsByUnitId', cohabitantController.findCohabitantByUnitId);
 router.put('/deleteCohabitants', cohabitantController.deleteCohabitants);
 router.put('/updateCohabitants', cohabitantController.updateCohabitants);
 
