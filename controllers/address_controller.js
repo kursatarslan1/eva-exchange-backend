@@ -46,4 +46,15 @@ async function getState(req, res){
     }
 }
 
-module.exports = { getCountry, getCity, getState , getCityByName};
+async function getStateByName(req,res){
+    const { city_name } = req.query;
+    try{
+        const stateList = await State.StatesByName(city_name);
+        res.json({stateList});
+    } catch (error) {
+        console.error('error in state list: ', error);
+        res.status(500).json({error: 'Cannot get state list.'});
+    }
+}
+
+module.exports = { getCountry, getCity, getState , getCityByName, getStateByName};
