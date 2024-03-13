@@ -70,6 +70,18 @@ async function getInformationByEmail(req, res) {
     }
 }
 
+async function getInformationByUnitId(req, res){
+    const { unit_id } = req.query;
+
+    try {
+        const result = await Resident.findByUnitId(unit_id);
+        return res.json({ result });
+    } catch (error) {
+        console.log('Konut sakini bilgileri alınırken bir hata oluştu: ', error);
+        res.status(500).json({ error: 'Cannot get resident info' });
+    }
+}
+
 async function deactive(req, res) {
     const { resident_id } = req.body;
     try {
@@ -164,5 +176,6 @@ module.exports = {
     GetAllResidentByApartmentId,
     GetAllWaitingApprovalResidents,
     ApproveResident,
-    RejectResident
+    RejectResident,
+    getInformationByUnitId
 };

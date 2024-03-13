@@ -1,10 +1,10 @@
 const { Cohabitants } = require('../models/cohabitants_model');
 
 async function createCohabitants(req, res){
-    const {dependent_resident_id, first_name, last_name, phone_number, email, record_status} = req.body;
+    const {resident_id, apartment_id, first_name, last_name, phone_number, email, record_status} = req.body;
 
     try{
-        const cohabitantResult = await Cohabitants.create(dependent_resident_id, first_name, last_name, phone_number, email, 'A');
+        const cohabitantResult = await Cohabitants.create(resident_id, apartment_id, first_name, last_name, phone_number, email, 'A');
 
         if(!cohabitantResult){
             return res.status(400).json({ error: 'Cannot create cohabitants: ', error});
@@ -42,7 +42,7 @@ async function findCohabitantByUnitId(req ,res){
 }
 
 async function deleteCohabitants(req,res){
-    const { cohabitant_id } = req.query;
+    const { cohabitant_id } = req.body;
 
     try{
         const deleteResult = await Cohabitants.deleteCohabitants(cohabitant_id);

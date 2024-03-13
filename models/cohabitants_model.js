@@ -11,9 +11,9 @@ class Cohabitants{
         this.record_status = record_status;
     }
 
-    static async create(dependent_resident_id, first_name, last_name, phone_number, email, record_status){
-        const queryText = 'INSERT INTO cohabitants (dependent_resident_id, first_name, last_name, phone_number, email, record_status) VALUES ($1, $2, $3, $4, $5, $6) RETURNING cohabitants_id';
-        const values = [dependent_resident_id, first_name, last_name, phone_number, email, record_status];
+    static async create(dependent_resident_id, apartment_id, first_name, last_name, phone_number, email, record_status){
+        const queryText = 'INSERT INTO cohabitants (dependent_resident_id, apartment_id, first_name, last_name, phone_number, email, record_status) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING cohabitants_id';
+        const values = [dependent_resident_id, apartment_id, first_name, last_name, phone_number, email, record_status];
 
         try{
             const result = await client.query(queryText, values);
@@ -24,8 +24,8 @@ class Cohabitants{
     }
 
     static async findByResidentId(dependent_resident_id){
-        const queryText = 'SELECT * FROM cohabitants WHERE dependent_resident_id = $1';
-        const values = [dependent_resident_id];
+        const queryText = 'SELECT * FROM cohabitants WHERE dependent_resident_id = $1 AND record_status = $2';
+        const values = [dependent_resident_id, 'A'];
 
         try{
             const result = await client.query(queryText, values);
@@ -36,14 +36,14 @@ class Cohabitants{
     }
 
     static async findByUnitId(unit_id) {
-        const queryText = 'SELECT resident_id FROM residents WHERE unit_id = $1';
-        const values = [unit_id];
+        const queryText = 'SELECT resident_id FROM residents WHERE unit_id = $1 AND record_status = $2';
+        const values = [unit_id, 'A'];
 
         try{
             const result = await client.query(queryText, values);
             if(result) {
-                const cohabitantsQuery = 'SELECT * FROM cohabitants WHERE dependent_resident_id = $1';
-                const values = [result.rows[0].resident_id];
+                const cohabitantsQuery = 'SELECT * FROM cohabitants WHERE dependent_resident_id = $1 AND record_status = $2';
+                const values = [result.rows[0].resident_id, 'A'];
                 
                 const cohabitants = await client.query(cohabitantsQuery, values);
                 return cohabitants.rows;

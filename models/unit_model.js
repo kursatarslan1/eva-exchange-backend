@@ -1,7 +1,7 @@
 const { client } = require('../middleware/database');
 
 class Unit {
-    static async createUnitsForBlocks(blocksData) {
+    static async createUnitsForBlocksT(blocksData) {
         try {
             for (let blockData of blocksData) {
                 const { block_id, apartment_id, unit_count } = blockData;

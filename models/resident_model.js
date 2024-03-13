@@ -43,6 +43,18 @@ class Resident{
         }
     }
 
+    static async findByUnitId(unit_id){
+        const queryText = 'SELECT resident_id, first_name, last_name, phone_number, email, tenant, photo, address FROM residents WHERE unit_id = $1 AND record_status = $2';
+        const values = [unit_id, 'A'];
+
+        try {
+            const result = await client.query(queryText, values);
+            return result.rows[0];
+        } catch(error) {
+            console.log('Konut sakini bilgileri alınırken bir hata oluştu: ', error);
+        }
+    }
+
     static async DeactiveAccount(resident_id){
         const queryText = 'UPDATE residents SET record_status = $1 WHERE resident_id = $2'
         const values = ['P', resident_id];

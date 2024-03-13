@@ -1,6 +1,6 @@
 const { Apartment } = require('../models/apartment_model');
 const { Block } = require('../models/block_model');
-const Unit = require('../models/unit_model');
+const { Unit } = require('../models/unit_model');
 
 async function createApartment(req, res) {
     const { manager_id, apartment_name, apartment_country, apartment_city, apartment_state, apartment_full_address, apartment_due_amount, apartment_license, record_status, blocks } = req.body;
@@ -30,8 +30,8 @@ async function createApartment(req, res) {
             }
             
             block.block_id = blockResult;
-            // Her bir blok için birimleri oluşturma işlemi
-            await Unit.createUnitsForBlocks([block]); // Blok verisini bir dizi içinde gönder
+
+            await Unit.createUnitsForBlocksT([block]); 
         }
 
         // Başarıyla tamamlanan işlemi yanıtla
