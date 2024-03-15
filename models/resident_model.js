@@ -55,6 +55,18 @@ class Resident{
         }
     }
 
+    static async findByResidentId(resident_id){
+        const queryText = 'SELECT * FROM residents WHERE resident_id = $1 AND record_status = $2';
+        const values = [resident_id, 'A'];
+
+        try{
+            const result = await client.query(queryText, values);
+            return result.rows[0];
+        } catch (error) {
+            console.log('Resident bilgileri alınırken bir hata oluştu: ', error);
+        }
+    }
+
     static async DeactiveAccount(resident_id){
         const queryText = 'UPDATE residents SET record_status = $1 WHERE resident_id = $2'
         const values = ['P', resident_id];

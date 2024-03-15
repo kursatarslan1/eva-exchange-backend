@@ -12,6 +12,7 @@ router.put('/updateResidentInfo', residentController.updateResident);
 router.get('/getAllResident', residentController.GetAllResidentByApartmentId);
 router.get('/getAllWaitingApprovalResidents', residentController.GetAllWaitingApprovalResidents);
 router.get('/getInformationByUnitId', residentController.getInformationByUnitId);
+router.get('/getInformationByResidentId', residentController.getInformationByResidentId);
 router.put('/approveResident', residentController.ApproveResident);
 router.put('/rejectResident', residentController.RejectResident);
 

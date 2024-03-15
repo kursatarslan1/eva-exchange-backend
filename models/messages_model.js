@@ -10,71 +10,86 @@ class Messages{
     }
 
     static async sendMessage(senderId, recipientId, content) {
-        try {
+      try {
           const timestamp = new Date(); // Şu anki zamanı al
           const messageId = await this.createMessage(senderId, recipientId, content, timestamp);
           const conversationId = await this.findOrCreateConversation(senderId, recipientId, messageId);
           await this.addMessageToConversation(conversationId, messageId);
           return { success: true, message: "Message sent successfully." };
-        } catch (error) {
+      } catch (error) {
           console.error("Error sending message: ", error);
-        }
-    }
+          return { success: false, error: "Error sending message." };
+      }
+  }
       
-    static createMessage = async (senderId, recipientId, content, timestamp) => {
+  static async createMessage(senderId, recipientId, content, timestamp) {
+    try {
         const messageQuery = `
-          INSERT INTO messages (sender_id, recipient_id, content, timestamp)
-          VALUES ($1, $2, $3, $4)
-          RETURNING message_id
+            INSERT INTO messages (sender_id, recipient_id, content, timestamp)
+            VALUES ($1, $2, $3, $4)
+            RETURNING message_id
         `;
         const messageValues = [senderId, recipientId, content, timestamp];
         const messageResult = await client.query(messageQuery, messageValues);
         return messageResult.rows[0].message_id;
-    };
+    } catch (error) {
+        console.error("Error creating message: ", error);
+        throw error; // Hata fırlatılır ve üst seviyede işlenir
+    }
+}
       
-    static findOrCreateConversation = async (userId1, userId2, messageId) => {
-        const conversationQuery = `
+static async findOrCreateConversation(userId1, userId2, messageId) {
+  try {
+      const conversationQuery = `
           SELECT conversation_id
           FROM conversations
           WHERE (user_id_1 = $1 AND user_id_2 = $2) OR (user_id_1 = $2 AND user_id_2 = $1)
-        `;
-        const conversationValues = [userId1, userId2];
-        const conversationResult = await client.query(conversationQuery, conversationValues);
-      
-        let conversationId;
-      
-        // Eğer konuşma yoksa yeni bir konuşma oluştur
-        if (conversationResult.rows.length === 0) {
+      `;
+      const conversationValues = [userId1, userId2];
+      const conversationResult = await client.query(conversationQuery, conversationValues);
+
+      let conversationId;
+
+      if (conversationResult.rows.length === 0) {
           const newConversationQuery = `
-            INSERT INTO conversations (user_id_1, user_id_2, last_message_id)
-            VALUES ($1, $2, $3)
-            RETURNING conversation_id
+              INSERT INTO conversations (user_id_1, user_id_2, last_message_id)
+              VALUES ($1, $2, $3)
+              RETURNING conversation_id
           `;
           const newConversationValues = [userId1, userId2, messageId];
           const newConversationResult = await client.query(newConversationQuery, newConversationValues);
           conversationId = newConversationResult.rows[0].conversation_id;
-        } else {
+      } else {
           conversationId = conversationResult.rows[0].conversation_id;
-        }
+      }
+
+      return conversationId;
+  } catch (error) {
+      console.error("Error finding or creating conversation: ", error);
+      throw error;
+  }
+}
       
-        return conversationId;
-    };
-      
-    static addMessageToConversation = async (conversationId, messageId) => {
-        const conversationMessageQuery = `
+static async addMessageToConversation(conversationId, messageId) {
+  try {
+      const conversationMessageQuery = `
           INSERT INTO conversations_messages (conversation_id, message_id)
           VALUES ($1, $2)
-        `;
-        const conversationMessageValues = [conversationId, messageId];
-        await client.query(conversationMessageQuery, conversationMessageValues);
-    };
+      `;
+      const conversationMessageValues = [conversationId, messageId];
+      await client.query(conversationMessageQuery, conversationMessageValues);
+  } catch (error) {
+      console.error("Error adding message to conversation: ", error);
+      throw error;
+  }
+}
 
       // get all message history 
 
       
     static getMessagesFromConversation = async (conversationId) => {
         const query = `
-            SELECT cm.conversation_id, m.content, m.timestamp, 
+            SELECT cm.conversation_id, m.content, m.timestamp, m.sender_id, m.recipient_id,
             CASE 
                 WHEN u1.manager_id IS NOT NULL THEN u1.first_name || ' ' || u1.last_name
                 WHEN u2.resident_id IS NOT NULL THEN u2.first_name || ' ' || u2.last_name

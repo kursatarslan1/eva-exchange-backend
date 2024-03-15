@@ -17,7 +17,7 @@ async function sendMessage(req, res) {
     }
 }
 
-async function getAllMessages(req, res){
+async function getAllMessages(req, res){ // iki kişinin konuşmalarını getirir
     const { user_id_1, user_id_2 } = req.query;
     try{
         const getAllMessages = await Messages.getAllMessages(user_id_1, user_id_2);
@@ -28,7 +28,7 @@ async function getAllMessages(req, res){
     }
 }
 
-async function getMessagesByUserId(req, res){
+async function getMessagesByUserId(req, res){ // sohbetleri getirir
     const {user_id} = req.query;
 
     try{

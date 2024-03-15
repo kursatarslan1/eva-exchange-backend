@@ -82,6 +82,18 @@ async function getInformationByUnitId(req, res){
     }
 }
 
+async function getInformationByResidentId(req, res){
+    const { resident_id } = req.query;
+
+    try{
+        const result = await Resident.findByResidentId(resident_id);
+        return res.json({ result });
+    } catch (error){
+        console.log('Resident bilgileri alınırken bir hata oluştu: (controller) ', error);
+        res.status(500).json({ error: 'Cannot get resident info' });
+    }
+}
+
 async function deactive(req, res) {
     const { resident_id } = req.body;
     try {
@@ -177,5 +189,6 @@ module.exports = {
     GetAllWaitingApprovalResidents,
     ApproveResident,
     RejectResident,
-    getInformationByUnitId
+    getInformationByUnitId,
+    getInformationByResidentId
 };

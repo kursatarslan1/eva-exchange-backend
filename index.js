@@ -1,6 +1,7 @@
 const { connectToDatabase } = require('./middleware/database');
 const express = require('express');
 const app = express();
+
 const managerRoutes = require('./routes/manager_routes');
 const apartmentRoutes = require('./routes/apartment_routes');
 const residentRoutes = require('./routes/resident_routes');
@@ -21,6 +22,7 @@ const cors = require('cors');
 app.use(express.json());
 app.use(cors());
 app.set('trust proxy', true);
+
 
 app.use(express.json({ limit: '50mb' })); // JSON veri boyutu sınırı
 app.use(express.urlencoded({ limit: '50mb', extended: true })); 
