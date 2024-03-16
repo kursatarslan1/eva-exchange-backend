@@ -28,6 +28,27 @@ class Debt{
         }
     }
 
+    static async massDebitCreate(apartment_id, description, debit_type, last_payment_date, amount) {
+        try {
+            const residentQuery = 'SELECT resident_id, block_id, unit_id FROM residents WHERE apartment_id = $1 AND record_status = $2 AND status = $3';
+            const residentResult = await client.query(residentQuery, [apartment_id, 'A', 'A']);
+            
+            for (const row of residentResult.rows) {
+                const resident_id = row.resident_id;
+                const created_at = new Date(); 
+                const payment_date = null; 
+                const block_id = row.block_id;
+                const unit_id = row.unit_id;
+                
+                await this.create(resident_id, apartment_id, block_id, unit_id, amount, created_at, payment_date, last_payment_date, description, "Not pay", debit_type);
+            }
+            return true; 
+        } catch (error) {
+            console.error('Error creating mass debt: ', error);
+            return false; 
+        }
+    }
+
     static async getDebtListByResidentId(resident_id){
         const queryText = 'SELECT * FROM debt WHERE resident_id = $1';
         const values = [resident_id];

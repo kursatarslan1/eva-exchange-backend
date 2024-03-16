@@ -15,6 +15,19 @@ async function create(req, res){
     }
 }
 
+async function massDebitCreate(req, res){
+    const { apartment_id, description, debit_type, last_payment_date, amount } = req.body;
+
+    try{
+        const massDebtRes = await Debt.massDebitCreate(apartment_id, description, debit_type, last_payment_date, amount);
+        if(massDebtRes){
+            res.json({ success: 'true' });
+        }
+    } catch (error) {
+        console.log('toplu borçlandırma yapılırken bir hata ile karşılaşıldı: ', error);
+    }
+}
+
 async function getDebtList(req, res){
     const { resident_id } = req.query;
 
@@ -37,4 +50,4 @@ async function updateDebt(req, res){
     }
 }
 
-module.exports = { create, getDebtList, updateDebt };
+module.exports = { create, getDebtList, updateDebt, massDebitCreate };

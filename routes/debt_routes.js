@@ -7,5 +7,6 @@ router.use(express.json());
 router.post('/create', debtController.create);
 router.get('/getDebt', debtController.getDebtList);
 router.put('/payDebt', debtController.updateDebt);
+router.post('/createMassDebt', debtController.massDebitCreate);
 
 module.exports = router;
