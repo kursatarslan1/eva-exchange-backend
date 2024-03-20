@@ -11,7 +11,7 @@ async function checkTokenValidity(token) {
                 return resolve(false);
             }
 
-            resolve(true);
+            resolve(decoded);
         });
     });
 }
