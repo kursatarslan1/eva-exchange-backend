@@ -87,12 +87,13 @@ async function getInformationByToken(req, res) {
 
             res.json({
                 id: manager.manager_id,
-                email: manager.manager_email,
+                email: manager.email,
                 manager_role: manager.manager_role,
                 first_name: manager.first_name,
                 last_name: manager.last_name,
                 photo: manager.photo,
-                role: 'manager'
+                role: 'manager',
+                phone_number: manager.phone_number
             });
         } else {
             const email = decoded.resident.email;
