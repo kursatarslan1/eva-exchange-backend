@@ -22,6 +22,15 @@ async function getLicenseByApartmentId(req, res){
     }
 }
 
+async function getLicensePackages(req, res){
+    try{
+        const getLicensePackagesResult = await License.getLicensePackages();
+        res.json({getLicensePackagesResult});
+    } catch (error) {
+        console.log('Error getting license packages: ', error);
+    }
+}
+
 async function assignLicense(req,res){
     const { key_value, manager_id, apartment_id, valid_duration } = req.body;
 
@@ -33,4 +42,4 @@ async function assignLicense(req,res){
     }
 }
 
-module.exports = { create, getLicenseByApartmentId, assignLicense }
+module.exports = { create, getLicenseByApartmentId, assignLicense, getLicensePackages }

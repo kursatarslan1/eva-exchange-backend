@@ -37,6 +37,16 @@ class License{
         }
     }
 
+    static async getLicensePackages(){
+        const queryText = 'SELECT * FROM license_packages';
+        try{
+            const result = await client.query(queryText, []);
+            return result.rows;
+        } catch (error) {
+            console.log('Error getting license packages: ', error);
+        }
+    }
+
     static async assign(key_value, manager_id, apartment_id, valid_duration) {
         try {
             const is_used = true;
