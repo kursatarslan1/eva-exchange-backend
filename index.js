@@ -15,6 +15,7 @@ const debtRoutes = require('./routes/debt_routes');
 const paymentHistoryRoutes = require('./routes/payment_history_routes');
 const knowledgeAndRulesRotes = require('./routes/knowledge_and_rules_routes');
 const unitRoutes = require('./routes/unit_routes');
+const todoListRoutes = require('./routes/todolist_routes');
 
 require('dotenv').config();
 const cors = require('cors');
@@ -40,6 +41,7 @@ app.use('/steyon/debt', debtRoutes);
 app.use('/steyon/paymentHistory', paymentHistoryRoutes);
 app.use('/steyon/knowledgeAndRules', knowledgeAndRulesRotes);
 app.use('/steyon/unit', unitRoutes);
+app.use('/steyon/todo', todoListRoutes);
 
 const PORT = 3000;
 
