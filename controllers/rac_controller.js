@@ -6,6 +6,7 @@ async function createRac(req, res){
     try{
         const racRes = await RequestsAndComplaints.create(apartment_id, content, publisher, publisher_id, created_at, priority, request_type, status);
         if(!racRes){
+            res.json({ success: false });
             console.error('Request or complaints creation failed');
         }
         res.json({ success: 'true' });

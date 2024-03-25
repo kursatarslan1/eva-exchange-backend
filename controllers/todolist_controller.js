@@ -47,18 +47,18 @@ async function getCompletedTaskByManagerId(req, res) {
     const { manager_id } = req.query;
 
     try {
-        const listResult = await ToDoList.getCompletedTaskByManagerId(manager_id);
-        if (!listResult) {
+        const result = await ToDoList.getCompletedTaskByManagerId(manager_id);
+        if (!result) {
             res.json({ success: false });
         }
-        res.json({ listResult });
+        res.json({ result });
     } catch (error) {
         res.json({ success: false });
     }
 }
 
 async function deleteTaskByTaskId(req, res){
-    const { task_id } = req.body;
+    const { task_id } = req.query;
 
     try {
         const deleteResponse = await ToDoList.removeTaskByTaskId(task_id);

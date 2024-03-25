@@ -26,6 +26,20 @@ class Apartment{
         }
     }
 
+    static async createTill(apartment_id, block_id){
+        const queryText = 'INSERT INTO till_info (till_name, apartment_id, block_id, total_expected_revenue, total_expected_expense, current_revenue, current_expense) VALUES($1, $2, $3, $4, $5, $6, $7)';
+        const values = ['Cash', apartment_id, block_id, 0, 0, 0, 0];
+        const posValues = ['Pos', apartment_id, block_id, 0, 0, 0, 0];
+
+        try{
+            await client.query(queryText, values);
+            await client.query(queryText, posValues);
+            return true;
+        } catch (error){
+            console.log('Error creating till info: ', error);
+        }
+    }
+
     static async createRelation(manager_id, apartment_id){
         const queryText = 'INSERT INTO manager_apartment_relation (manager_id, apartment_id) VALUES($1,$2)';
         const values = [manager_id, apartment_id];
@@ -167,19 +181,16 @@ class Apartment{
         }
     }
 
-    static async updateApartmentInfo(apartment_id, apartment_name, apartment_country, apartment_city, apartment_state, apartment_full_address, apartment_due_amount){
+    static async updateApartmentInfo(apartment_id, apartment_name, apartment_full_address, apartment_due_amount){
         try{
             const updateFields = [
                 "apartment_name",
-                "apartment_country",
-                "apartment_city",
-                "apartment_state",
                 "apartment_full_address",
                 "apartment_due_amount"
             ]
 
             const updateValues = [
-                apartment_name, apartment_country, apartment_city, apartment_state, apartment_full_address, apartment_due_amount
+                apartment_name, apartment_full_address, apartment_due_amount
             ];
 
             const queryText = `
