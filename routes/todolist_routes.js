@@ -5,6 +5,7 @@ const todolistController = require('../controllers/todolist_controller');
 router.use(express.json());
 
 router.post('/create', todolistController.createTask);
+router.put('/unDone', todolistController.unDoneTask);
 router.get('/getUncompletedTaskByManagerId', todolistController.getTasksByManagerId);
 router.get('/getCompletedTaskByManagerId', todolistController.getCompletedTaskByManagerId)
 router.put('/updateTaskByTaskId', todolistController.completeTaskById);

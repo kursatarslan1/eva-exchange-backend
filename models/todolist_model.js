@@ -22,6 +22,19 @@ class ToDoList{
         }
     }
 
+    static async unDone(task_id){
+        const queryText = 'UPDATE tasks SET status = $1 WHERE task_id = $2';
+        const values = ['X',task_id];
+
+        try{
+            const result = await client.query(queryText, values);
+            return true;
+        }catch(error){
+            console.log('Error getting to do list: ', error);
+            return false;
+        }
+    }
+
     static async getToDoListByManagerId(manager_id){
         const queryText = 'SELECT * FROM tasks WHERE manager_id = $1 AND status = $2';
         const values = [manager_id, 'X'];

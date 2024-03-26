@@ -15,6 +15,21 @@ async function createTask(req, res) {
     }
 }
 
+async function unDoneTask(req, res){
+    const { task_id } = req.body;
+
+    try{
+        const unDoneResponse = await ToDoList.unDone(task_id);
+        if(!unDoneResponse){
+            res.json({ success: false });
+        }
+        res.json({ success: true });
+    }catch(error){
+        console.log('unexpected error creating task: ', error);
+        res.json({ success: false });
+    }
+}
+
 async function getTasksByManagerId(req, res) {
     const { manager_id } = req.query;
 
@@ -76,5 +91,6 @@ module.exports = {
     getTasksByManagerId,
     completeTaskById,
     getCompletedTaskByManagerId,
-    deleteTaskByTaskId
+    deleteTaskByTaskId,
+    unDoneTask
 }
