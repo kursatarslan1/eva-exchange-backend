@@ -106,6 +106,7 @@ async function getInformationByToken(req, res) {
             res.json({
                 id: resident.resident_id,
                 email: resident.email,
+                apartment_id: resident.apartment_id,
                 tenant: resident.tenant,
                 phone_number: resident.phone_number,
                 first_name: resident.first_name,
