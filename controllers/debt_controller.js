@@ -16,10 +16,10 @@ async function create(req, res){
 }
 
 async function massDebitCreate(req, res){
-    const { apartment_id, description, debit_type, last_payment_date, amount } = req.body;
+    const { apartment_id, description, debit_type, last_payment_date, amount, include_empty_units } = req.body;
 
     try{
-        const massDebtRes = await Debt.massDebitCreate(apartment_id, description, debit_type, last_payment_date, amount);
+        const massDebtRes = await Debt.massDebitCreate(apartment_id, description, debit_type, last_payment_date, amount, include_empty_units);
         if(massDebtRes){
             res.json({ success: 'true' });
         }
@@ -50,4 +50,46 @@ async function updateDebt(req, res){
     }
 }
 
-module.exports = { create, getDebtList, updateDebt, massDebitCreate };
+async function totalExpectedRevenue(req, res){
+    const { apartment_id, year, month } = req.query;
+
+    try{
+        const result = await Debt.TotalExpectedRevenue(month, year, apartment_id);
+        if(!result){
+            res.status(500).json({ success: false });
+        }
+        res.json({result});
+    } catch (error) {
+        res.status(500).json({ success: false });
+    }
+}
+
+async function totalRevenue(req, res){
+    const { apartment_id, year, month } = req.query;
+
+    try{
+        const result = await Debt.TotalRevenue(month, year, apartment_id);
+        if(!result){
+            res.status(500).json({ success: false });
+        }
+        res.json({result});
+    } catch (error) {
+        res.status(500).json({ success: false });
+    }
+}
+
+async function getDebtUserList(req, res){
+    const { apartment_id } = req.query;
+
+    try{
+        const result = await Debt.getDebtUserList(apartment_id);
+        if(!result){
+            res.status(500).json({ success: false });
+        }
+        res.json({result});
+    } catch (error) {
+        res.status(500).json({ success: false });
+    }
+}
+
+module.exports = { create, getDebtList, updateDebt, massDebitCreate, totalExpectedRevenue, totalRevenue, getDebtUserList };
