@@ -16,10 +16,8 @@ async function register(req, res) {
     email,
     tenant,
     avatar,
-    record_status,
     address,
   } = req.body;
-
   try {
     // E-posta adresiyle kullanıcı araması yap
     const existingUser = await Resident.findByEmail(email);
@@ -46,7 +44,7 @@ async function register(req, res) {
       email,
       tenant,
       photo,
-      record_status,
+      "A",
       address
     );
 

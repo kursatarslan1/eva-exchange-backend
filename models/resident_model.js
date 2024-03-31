@@ -56,7 +56,7 @@ class Resident {
       email,
       tenant,
       photo,
-      record_status,
+      "A",
       address,
     ];
 
