@@ -47,6 +47,22 @@ class ApartmentExpense{
         }
 
     }
+
+    static async updateFixedExpense(expense_id, expense_name, expense_amount, expense_period, expense_content){
+        const query = {
+            text: 'UPDATE apartment_expense SET expense_name = $2, expense_amount = $3, expense_period = $4, expense_content = $5 WHERE expense_id = $1',
+            values: [expense_id, expense_name, expense_amount, expense_period, expense_content]
+        };
+    
+        try {
+            await client.query(query);
+            console.log("Expense updated successfully");
+            return true;
+        } catch (err) {
+            console.error("Error updating expense:", err);
+            throw err;
+        }
+    }
 }
 
 module.exports = { ApartmentExpense };

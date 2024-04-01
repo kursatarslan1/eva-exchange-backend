@@ -46,4 +46,18 @@ async function deleteFixedExpense(req, res){
     }
 }
 
-module.exports = {createFixedExpense, getFixedExpenses , deleteFixedExpense}
+async function updateFixedExpense(req, res){
+    const { expense_id, expense_name, expense_amount, expense_period, expense_content } = req.body;
+
+    try{
+        const updateFixedExpenseResult = await ApartmentExpense.updateFixedExpense(expense_id, expense_name, expense_amount, expense_period, expense_content);
+        if(!updateFixedExpense){
+            res.json({ success: false });
+        }
+        res.json({ success: true });
+    } catch (error){
+        res.json({ success: false });
+    }
+}
+
+module.exports = {createFixedExpense, getFixedExpenses , deleteFixedExpense, updateFixedExpense }

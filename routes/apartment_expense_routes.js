@@ -7,5 +7,6 @@ router.use(express.json());
 router.post('/createFixedExpense', apartmentExpenseController.createFixedExpense);
 router.get('/getFixedExpenses', apartmentExpenseController.getFixedExpenses);
 router.delete('/deleteFixedExpense', apartmentExpenseController.deleteFixedExpense);
+router.put('/updateFixedExpense', apartmentExpenseController.updateFixedExpense);
 
 module.exports = router;
