@@ -45,9 +45,11 @@ class PaymentHistory {
 
     try {
       const result = await client.query(queryText, values);
+      const paymentDate = new Date();
       if (result) {
-        const updateDebt = "UPDATE debt SET status = $1 WHERE debt_id = $2;";
-        const values = ["Payed", debt_id];
+        const updateDebt =
+          "UPDATE debt SET status = $1, payment_date = $2 WHERE debt_id = $3;";
+        const values = ["Payed", paymentDate, debt_id];
 
         const updateDebtResult = await client.query(updateDebt, values);
         if (!updateDebtResult) {

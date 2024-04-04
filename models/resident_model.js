@@ -221,6 +221,19 @@ class Resident {
       console.log("Kullanıcı reddedilirken bir hata oluştu: ", error);
     }
   }
+
+  static async findById(id) {
+    const queryText =
+      "SELECT * FROM residents WHERE resident_id = $1 and record_status = $2";
+    const values = [id, "A"];
+
+    try {
+      const result = await client.query(queryText, values);
+      return result.rows[0];
+    } catch (error) {
+      console.log("Error getting resident by id: ", error);
+    }
+  }
 }
 
 module.exports = { Resident };

@@ -95,6 +95,40 @@ async function login(req, res) {
   }
 }
 
+async function changePassword(req, res) {
+  const { user_id, old_password, new_password } = req.body;
+
+  try {
+    const resident = await Resident.findById(user_id);
+
+    if (!resident) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const passwordRecord = await Password.findByUserId(
+      resident.resident_id,
+      "H"
+    );
+    const passwordMatch = await bcrypt.compare(
+      old_password,
+      passwordRecord.password_hash
+    );
+
+    if (!passwordMatch) {
+      return res.status(401).json({ error: "Old password is incorrect" });
+    }
+
+    const hashedPassword = await bcrypt.hash(new_password, 10);
+
+    await Password.changePassword(resident.resident_id, hashedPassword, "H");
+
+    res.json({ message: "Password changed successfully" });
+  } catch (error) {
+    console.error("Error changing password: " + error);
+    res.status(500).json({ error: "Password could not be changed" });
+  }
+}
+
 async function getInformationByEmail(req, res) {
   const { email } = req.query;
 
@@ -243,4 +277,5 @@ module.exports = {
   RejectResident,
   getInformationByUnitId,
   getInformationByResidentId,
+  changePassword,
 };

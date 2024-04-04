@@ -51,6 +51,37 @@ async function register(req, res) {
   }
 }
 
+async function changePassword(req, res) {
+  const { user_id, old_password, new_password } = req.body;
+
+  try {
+    const manager = await Manager.findById(user_id);
+
+    if (!manager) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const passwordRecord = await Password.findByUserId(manager.manager_id, "E");
+    const passwordMatch = await bcrypt.compare(
+      old_password,
+      passwordRecord.password_hash
+    );
+
+    if (!passwordMatch) {
+      return res.status(401).json({ error: "Old password is incorrect" });
+    }
+
+    const hashedPassword = await bcrypt.hash(new_password, 10);
+
+    await Password.changePassword(manager.manager_id, hashedPassword, "E");
+
+    res.json({ message: "Password changed successfully" });
+  } catch (error) {
+    console.error("Error changing password: " + error);
+    res.status(500).json({ error: "Password could not be changed" });
+  }
+}
+
 async function login(req, res) {
   const { email, password } = req.body;
 
@@ -219,4 +250,5 @@ module.exports = {
   updateManager,
   tokenIsValid,
   getInformationByToken,
+  changePassword,
 };
