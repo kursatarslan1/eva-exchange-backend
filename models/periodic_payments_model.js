@@ -7,7 +7,9 @@ class PeriodicPayments {
     unit_id,
     period_name,
     start_date,
-    end_date
+    end_date,
+    description,
+    amount
   ) {
     this.period_id = period_id;
     this.apartment_id = apartment_id;
@@ -15,6 +17,8 @@ class PeriodicPayments {
     this.period_name = period_name;
     this.start_date = start_date;
     this.end_date = end_date;
+    this.description = description;
+    this.amount = amount;
   }
 
   static async create(
@@ -22,11 +26,13 @@ class PeriodicPayments {
     unit_id,
     period_name,
     start_date,
-    end_date
+    end_date,
+    description,
+    amount
   ) {
     const queryText =
-      "INSERT INTO payment_periods (apartment_id, unit_id, period_name, start_date, end_date) VALUES($1, $2, $3, $4, $5);";
-    const values = [apartment_id, unit_id, period_name, start_date, end_date];
+      "INSERT INTO payment_periods (apartment_id, unit_id, period_name, start_date, end_date, description, amount) VALUES($1, $2, $3, $4, $5, $6, $7);";
+    const values = [apartment_id, unit_id, period_name, start_date, end_date, description, amount];
 
     try {
       await client.query(queryText, values);

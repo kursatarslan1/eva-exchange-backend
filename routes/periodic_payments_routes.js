@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const periodController = require("../controllers/periodic_payments_model");
+const periodController = require("../controllers/periodic_payments_controller");
 
 router.use(express.json());
 

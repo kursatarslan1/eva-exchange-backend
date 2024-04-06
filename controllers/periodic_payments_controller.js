@@ -1,7 +1,7 @@
 const { PeriodicPayments } = require("../models/periodic_payments_model");
 
 async function createPeriodicPayment(req, res) {
-  const { apartment_id, unit_id, period_name, start_date, end_date } = req.body;
+  const { apartment_id, unit_id, period_name, start_date, end_date, description, amount } = req.body;
 
   try {
     const periodicRes = await PeriodicPayments.create(
@@ -9,7 +9,9 @@ async function createPeriodicPayment(req, res) {
       unit_id,
       period_name,
       start_date,
-      end_date
+      end_date,
+      description,
+      amount
     );
     if (!periodicRes) {
       res.status(401).json({ success: false });
