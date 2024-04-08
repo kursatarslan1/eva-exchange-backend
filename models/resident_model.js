@@ -83,7 +83,7 @@ class Resident {
 
   static async findByUnitId(unit_id) {
     const queryText =
-      "SELECT r.resident_id, r.first_name, r.last_name, r.phone_number, r.email, r.tenant, r.photo, r.address, u.notes FROM residents as r INNER JOIN units u ON r.unit_id = u.unit_id WHERE r.unit_id = $1 AND r.record_status = $2;";
+      "SELECT r.resident_id, r.first_name, r.last_name, r.phone_number, r.email, r.tenant, r.photo, r.address, r.block_id, u.notes FROM residents as r INNER JOIN units u ON r.unit_id = u.unit_id WHERE r.unit_id = $1 AND r.record_status = $2;";
     const values = [unit_id, "A"];
 
     try {

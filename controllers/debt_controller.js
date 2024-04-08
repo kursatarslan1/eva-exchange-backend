@@ -26,7 +26,7 @@ async function create(req, res) {
       payment_date,
       last_payment_date,
       description,
-      status,
+      "Not pay",
       debit_type
     );
 

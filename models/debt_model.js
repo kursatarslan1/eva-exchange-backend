@@ -54,7 +54,7 @@ class Debt {
       payment_date,
       last_payment_date,
       description,
-      "Not pay",
+      status,
       debit_type,
     ];
 
@@ -63,6 +63,35 @@ class Debt {
       return true;
     } catch (error) {
       console.error("Error creating debt: ", error);
+    }
+  }
+
+  static async checkPayedDebt(unit_id, status, debit_type) {
+    const queryText = `
+        SELECT 
+          CASE 
+            WHEN 
+              COUNT(*) > 0 THEN 'true'
+            ELSE 'false'
+          END AS result
+        FROM 
+          debt
+        WHERE 
+          unit_id = $1 
+          AND debit_type = $2 
+          AND status = $3
+          AND payment_date >= CURRENT_DATE + INTERVAL '1 month';
+      `;
+    const values = [unit_id, debit_type, status];
+
+    try {
+      const result = await client.query(queryText, values);
+      if (result.rows[0].result == 'true')
+        return true;
+      else
+        return false;
+    } catch (error) {
+      console.log('Error getting payed debts: ', error);
     }
   }
 
@@ -83,22 +112,30 @@ class Debt {
         for (const row of queryResult.rows) {
           const block_id = row.block_id;
           const unit_id = row.unit_id;
-          const created_at = new Date();
-          const payment_date = null;
 
-          await this.create(
-            null,
-            apartment_id,
-            block_id,
-            unit_id,
-            amount,
-            created_at,
-            payment_date,
-            last_payment_date,
-            description,
-            "Not pay",
-            debit_type
-          );
+          // check payed debts
+          const result = await this.checkPayedDebt(unit_id, 'Payed', debit_type);
+
+          if (!result) {
+            const created_at = new Date();
+            const payment_date = null;
+
+            await this.create(
+              null,
+              apartment_id,
+              block_id,
+              unit_id,
+              amount,
+              created_at,
+              payment_date,
+              last_payment_date,
+              description,
+              "Not pay",
+              debit_type
+            );
+          }
+          else
+            continue;
         }
       } else {
         const queryText =
@@ -110,22 +147,29 @@ class Debt {
         for (const row of queryResult.rows) {
           const block_id = row.block_id;
           const unit_id = row.unit_id;
-          const created_at = new Date();
-          const payment_date = null;
 
-          await this.create(
-            null,
-            apartment_id,
-            block_id,
-            unit_id,
-            amount,
-            created_at,
-            payment_date,
-            last_payment_date,
-            description,
-            "Not pay",
-            debit_type
-          );
+          // check payed debts
+          const result = await this.checkPayedDebt(unit_id, 'Payed', debit_type);
+
+          if (!result) {
+            const created_at = new Date();
+            const payment_date = null;
+
+            await this.create(
+              null,
+              apartment_id,
+              block_id,
+              unit_id,
+              amount,
+              created_at,
+              payment_date,
+              last_payment_date,
+              description,
+              "Not pay",
+              debit_type
+            );
+          } else
+            continue;
         }
       }
       return true;

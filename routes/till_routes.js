@@ -6,5 +6,6 @@ router.use(express.json());
 
 router.get('/getAllTillInfo', tillController.getAllTillInfo);
 router.get('/getBlockTillInfo', tillController.getBlockTillInfoByBlockId);
+router.get('/getAccounting', tillController.getAccounting);
 
 module.exports = router;

@@ -1,4 +1,5 @@
 const { client } = require("../middleware/database");
+const { Debt } = require("../models/debt_model");
 
 class PeriodicPayments {
   constructor(
@@ -28,19 +29,39 @@ class PeriodicPayments {
     start_date,
     end_date,
     description,
-    amount
+    amount,
+    block_id
   ) {
     const queryText =
       "INSERT INTO payment_periods (apartment_id, unit_id, period_name, start_date, end_date, description, amount) VALUES($1, $2, $3, $4, $5, $6, $7);";
     const values = [apartment_id, unit_id, period_name, start_date, end_date, description, amount];
-
+    const interval = this.getMonthDifference(start_date, end_date);
     try {
-      await client.query(queryText, values);
-      return true;
+      const result = await client.query(queryText, values);
+      if(result){
+        let currentStartDate = new Date(start_date); 
+        let add_amount = amount / interval;
+        for(let i = 0; i< interval; i++){
+          await Debt.create(null, apartment_id, block_id, unit_id, add_amount, start_date, currentStartDate, end_date, description, 'Payed', period_name);
+          currentStartDate.setMonth(currentStartDate.getMonth() + 1);
+        }
+        return true;
+      }
     } catch (error) {
       console.log("Error creating periodic payments: ", error);
       return false;
     }
+  }
+
+
+  static getMonthDifference(start_date, end_date) {
+    const start = new Date(start_date);
+    const end = new Date(end_date);
+    
+    const diffYears = end.getFullYear() - start.getFullYear();
+    const diffMonths = end.getMonth() - start.getMonth();
+    
+    return diffYears * 12 + diffMonths;
   }
 
   static async getPeriodicPayments(apartment_id) {
