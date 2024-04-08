@@ -161,7 +161,7 @@ class Till{
         const oneTimeApartmentExpense = await this.getApartmentOneTimeExpenseForAccounting(apartment_id);
         const debtIncome = await this.getDebtInfoForAccounting(date, apartment_id);
         
-        let totalApartmentExpense = apartmentExpense + oneTimeApartmentExpense;
+        let totalApartmentExpense = parseFloat(Number(apartmentExpense) + Number(oneTimeApartmentExpense)).toFixed(2);
         let totalCardIncome = debtIncome[0];
         let totalCashIncome = debtIncome[1];
         let totalExpectedIncome = debtIncome[2];
