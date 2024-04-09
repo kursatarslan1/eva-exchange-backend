@@ -37,7 +37,7 @@ class PaymentHistory {
       resident_id,
       apartment_id,
       amount,
-      new Date(),
+      payment_date,
       payment_method,
       description,
       payment_type,

@@ -169,6 +169,7 @@ async function getInformationByToken(req, res) {
         last_name: resident.last_name,
         photo: resident.photo,
         unit_id: resident.unit_id,
+        block_id: resident.block_id,
         address: resident.address,
         role: "resident",
       });

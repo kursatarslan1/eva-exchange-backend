@@ -1,5 +1,6 @@
 const { client } = require("../middleware/database");
 const { Debt } = require("../models/debt_model");
+const { PaymentHistory } = require("../models/payment_history_model")
 
 class PeriodicPayments {
   constructor(
@@ -43,6 +44,7 @@ class PeriodicPayments {
         let add_amount = amount / interval;
         for(let i = 0; i< interval; i++){
           await Debt.create(null, apartment_id, block_id, unit_id, add_amount, start_date, currentStartDate, end_date, description, 'Payed', period_name);
+          await PaymentHistory.create(null, apartment_id, add_amount, currentStartDate, "cash", description, period_name);
           currentStartDate.setMonth(currentStartDate.getMonth() + 1);
         }
         return true;
