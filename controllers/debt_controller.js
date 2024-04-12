@@ -155,6 +155,20 @@ async function getDebtUserList(req, res) {
   }
 }
 
+async function getUnitDebtList(req, res) {
+  const { apartment_id } = req.query;
+
+  try {
+    const result = await Debt.getUnitDebtList(apartment_id);
+    if (!result) {
+      res.status(500).json({ success: false });
+    }
+    res.json({ result });
+  } catch (error) {
+    res.status(500).json({ success: false });
+  }
+}
+
 module.exports = {
   create,
   getDebtList,
@@ -165,4 +179,5 @@ module.exports = {
   getDebtUserList,
   getNotPayedDebts,
   getPayedDebts,
+  getUnitDebtList,
 };

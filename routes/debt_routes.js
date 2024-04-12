@@ -16,5 +16,6 @@ router.get("/getTotalRevenueByYearAndMonth", debtController.totalRevenue);
 router.get("/getDebtUserList", debtController.getDebtUserList);
 router.get("/getNotPayedDebts", debtController.getNotPayedDebts);
 router.get("/getPayedDebts", debtController.getPayedDebts);
+router.get("/getUnitDebtList", debtController.getUnitDebtList);
 
 module.exports = router;

@@ -86,12 +86,10 @@ class Debt {
 
     try {
       const result = await client.query(queryText, values);
-      if (result.rows[0].result == 'true')
-        return true;
-      else
-        return false;
+      if (result.rows[0].result == "true") return true;
+      else return false;
     } catch (error) {
-      console.log('Error getting payed debts: ', error);
+      console.log("Error getting payed debts: ", error);
     }
   }
 
@@ -114,7 +112,11 @@ class Debt {
           const unit_id = row.unit_id;
 
           // check payed debts
-          const result = await this.checkPayedDebt(unit_id, 'Payed', debit_type);
+          const result = await this.checkPayedDebt(
+            unit_id,
+            "Payed",
+            debit_type
+          );
 
           if (!result) {
             const created_at = new Date();
@@ -133,9 +135,7 @@ class Debt {
               "Not pay",
               debit_type
             );
-          }
-          else
-            continue;
+          } else continue;
         }
       } else {
         const queryText =
@@ -149,7 +149,11 @@ class Debt {
           const unit_id = row.unit_id;
 
           // check payed debts
-          const result = await this.checkPayedDebt(unit_id, 'Payed', debit_type);
+          const result = await this.checkPayedDebt(
+            unit_id,
+            "Payed",
+            debit_type
+          );
 
           if (!result) {
             const created_at = new Date();
@@ -168,8 +172,7 @@ class Debt {
               "Not pay",
               debit_type
             );
-          } else
-            continue;
+          } else continue;
         }
       }
       return true;
@@ -275,7 +278,17 @@ class Debt {
       const result = await client.query(queryText, values);
       return result.rows;
     } catch (error) {
-      console.log("Error getting total expected revenue: ", error);
+      console.log("Error getting user debt list: ", error);
+    }
+  }
+
+  static async getUnitDebtList(apartment_id) {
+    try {
+      const queryText = "SELECT * FROM debt WHERE apartment_id = $1";
+      const result = await client.query(queryText, [apartment_id]);
+      return result.rows;
+    } catch (error) {
+      console.log("Error getting unit debt list: ", error);
     }
   }
 }
