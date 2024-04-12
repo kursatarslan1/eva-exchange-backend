@@ -72,7 +72,7 @@ class State{
             const queryText = 'SELECT id FROM states WHERE name = $1';
             const values = [city_name];
             const result = await client.query(queryText, values);
-            return this.States(result.rows[0]); // will be tested
+            return this.States(result.rows[0]); 
          } catch (error) {
              console.error('Error getting state list: ', error);
          }

@@ -14,4 +14,19 @@ async function createNote(req, res){
     }
 }
 
-module.exports = { createNote };
+async function getUnitAddressByUnitId(req, res){
+    const { unit_id } = req.query;
+
+    try{
+        const result = await Unit.findUnitAddressByUnitId(unit_id);
+        if(!result){
+            res.status(500).json({ success: false });
+        }
+        res.json({ result });
+    } catch (error){
+        console.log('error getting unit adress: ', error);
+        res.status(401).json({ success: false });
+    }
+}
+
+module.exports = { createNote, getUnitAddressByUnitId };

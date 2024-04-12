@@ -28,6 +28,17 @@ class Unit {
             console.log('Notlar güncellenirken bir hata ile karşılaşıldı: ', error);
         }
     }
+
+    static async findUnitAddressByUnitId(unit_id){
+        const queryText = 'SELECT b.block_name, u.unit_number from blocks as b INNER JOIN units as u ON u.block_id = b.block_id WHERE u.unit_id =$1;';
+        const values = [unit_id];
+        try{
+            const result = await client.query(queryText, values);
+            return result.rows[0];    
+        } catch (error) {
+            console.log('Error getting unit address: ', error);
+        }
+    }
 }
 
 module.exports = { Unit };
