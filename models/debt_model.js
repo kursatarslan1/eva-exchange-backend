@@ -266,14 +266,18 @@ class Debt {
     }
   }
 
-  static async getDebtUserList(apartment_id) {
+  static async getDebtUserList(date, apartment_id) {
     try {
       const queryText = `SELECT *
-                FROM residents
-                INNER JOIN debt
-                ON residents.block_id = debt.block_id AND residents.unit_id = debt.unit_id
-                WHERE residents.status = $1 and residents.record_status = $2 and residents.apartment_id = $3`;
-      const values = ["A", "A", apartment_id];
+      FROM residents
+      INNER JOIN debt ON residents.block_id = debt.block_id 
+          AND residents.unit_id = debt.unit_id
+      WHERE residents.status = $1 
+          AND residents.record_status = $2 
+          AND residents.apartment_id = $3
+          AND date_trunc('month', debt.payment_date) = date_trunc('month', $4::timestamp)
+          OR date_trunc('month', debt.created_at) = date_trunc('month', $4::timestamp)`;
+      const values = ["A", "A", apartment_id, date];
 
       const result = await client.query(queryText, values);
       return result.rows;
@@ -282,10 +286,11 @@ class Debt {
     }
   }
 
-  static async getUnitDebtList(apartment_id) {
+  static async getUnitDebtList(date, apartment_id) {
     try {
-      const queryText = "SELECT * FROM debt WHERE apartment_id = $1";
-      const result = await client.query(queryText, [apartment_id]);
+      const queryText = `SELECT * FROM debt WHERE apartment_id = $1 AND date_trunc('month', debt.payment_date) = date_trunc('month', $2::timestamp)
+      OR date_trunc('month', debt.created_at) = date_trunc('month', $2::timestamp)`;
+      const result = await client.query(queryText, [apartment_id, date]);
       return result.rows;
     } catch (error) {
       console.log("Error getting unit debt list: ", error);

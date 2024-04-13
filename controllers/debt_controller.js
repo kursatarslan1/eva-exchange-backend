@@ -142,10 +142,10 @@ async function totalRevenue(req, res) {
 }
 
 async function getDebtUserList(req, res) {
-  const { apartment_id } = req.query;
+  const { date, apartment_id } = req.query;
 
   try {
-    const result = await Debt.getDebtUserList(apartment_id);
+    const result = await Debt.getDebtUserList(date, apartment_id);
     if (!result) {
       res.status(500).json({ success: false });
     }
@@ -156,10 +156,10 @@ async function getDebtUserList(req, res) {
 }
 
 async function getUnitDebtList(req, res) {
-  const { apartment_id } = req.query;
+  const { apartment_id,date  } = req.query;
 
   try {
-    const result = await Debt.getUnitDebtList(apartment_id);
+    const result = await Debt.getUnitDebtList(date, apartment_id);
     if (!result) {
       res.status(500).json({ success: false });
     }
