@@ -14,6 +14,7 @@ async function createPayment(req, res) {
     card_number,
     card_exp_date,
     card_cvv,
+    iban_number
   } = req.body;
 
   try {
