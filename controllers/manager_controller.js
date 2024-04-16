@@ -171,6 +171,7 @@ async function getInformationByToken(req, res) {
         unit_id: resident.unit_id,
         block_id: resident.block_id,
         address: resident.address,
+        status: resident.status,
         role: "resident",
       });
     }
@@ -208,17 +209,14 @@ async function deactive(req, res) {
 }
 
 async function updateManager(req, res) {
-  const { manager_id, first_name, last_name, phone_number, photo, address } =
-    req.body;
+  const { id, first_name, last_name, phone_number } = req.body;
 
   try {
     const result = await Manager.UpdateManagerById(
-      manager_id,
+      id,
       first_name,
       last_name,
-      phone_number,
-      photo,
-      address
+      phone_number
     );
     if (!result) {
       return res.status(401).json({ error: "Manager could not update." });

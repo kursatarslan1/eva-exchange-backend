@@ -288,8 +288,12 @@ class Debt {
 
   static async getUnitDebtList(date, apartment_id) {
     try {
-      const queryText = `SELECT * FROM debt WHERE apartment_id = $1 AND date_trunc('month', debt.payment_date) = date_trunc('month', $2::timestamp)`;
-      const result = await client.query(queryText, [apartment_id, date]);
+      const queryText = `SELECT * FROM debt WHERE apartment_id = $1 AND date_trunc('month', debt.payment_date) = date_trunc('month', $2::timestamp) OR (date_trunc('month', debt.created_at) = date_trunc('month', $2::timestamp) AND status = $3)`;
+      const result = await client.query(queryText, [
+        apartment_id,
+        date,
+        "Not pay",
+      ]);
       return result.rows;
     } catch (error) {
       console.log("Error getting unit debt list: ", error);

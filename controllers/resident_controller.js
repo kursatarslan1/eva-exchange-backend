@@ -169,9 +169,9 @@ async function getInformationByResidentId(req, res) {
 }
 
 async function deactive(req, res) {
-  const { resident_id } = req.body;
+  const { resident_id, unit_id } = req.body;
   try {
-    const resident = await Resident.DeactiveAccount(resident_id);
+    const resident = await Resident.DeactiveAccount(resident_id, unit_id);
 
     if (!resident) {
       return res.status(401).json({ error: "Resident not found" });
@@ -185,27 +185,14 @@ async function deactive(req, res) {
 }
 
 async function updateResident(req, res) {
-  const {
-    resident_id,
-    first_name,
-    last_name,
-    phone_number,
-    photo,
-    country,
-    city,
-    state,
-  } = req.body;
+  const { id, first_name, last_name, phone_number } = req.body;
 
   try {
     const result = await Resident.UpdateResidentById(
-      resident_id,
+      id,
       first_name,
       last_name,
-      phone_number,
-      photo,
-      country,
-      city,
-      state
+      phone_number
     );
     if (!result) {
       return res.status(401).json({ error: "Resident could not update." });
