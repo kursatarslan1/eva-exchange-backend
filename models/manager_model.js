@@ -93,30 +93,11 @@ class Manager {
     }
   }
 
-  static async UpdateManagerById(
-    manager_id,
-    first_name,
-    last_name,
-    phone_number,
-    photo,
-    address
-  ) {
+  static async UpdateManagerById(id, first_name, last_name, phone_number) {
     try {
-      const updateFields = [
-        "first_name",
-        "last_name",
-        "phone_number",
-        "photo",
-        "address",
-      ];
+      const updateFields = ["first_name", "last_name", "phone_number"];
 
-      const updateValues = [
-        first_name,
-        last_name,
-        phone_number,
-        photo,
-        address,
-      ];
+      const updateValues = [first_name, last_name, phone_number];
 
       const queryText = `
                 UPDATE managers 
@@ -126,7 +107,7 @@ class Manager {
                 WHERE manager_id = $${updateFields.length + 1} RETURNING *
             `;
 
-      const values = [...updateValues, manager_id];
+      const values = [...updateValues, id];
 
       const result = await client.query(queryText, values);
       return result.rows[0];

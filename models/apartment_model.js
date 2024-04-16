@@ -1,71 +1,104 @@
-const { client } =  require('../middleware/database');
+const { client } = require("../middleware/database");
 
-class Apartment{
-    constructor(apartment_id, apartment_name, apartment_country, apartment_city, apartment_state, apartment_full_address, apartment_due_amount, apartment_license, record_status){
-        this.apartment_id = apartment_id;
-        this.apartment_name = apartment_name;
-        this.apartment_country = apartment_country;
-        this.apartment_city = apartment_city;
-        this.apartment_state = apartment_state;
-        this.apartment_full_address = apartment_full_address;
-        this.apartment_due_amount = apartment_due_amount;
-        this.apartment_license = apartment_license;
-        this.record_status = record_status;
+class Apartment {
+  constructor(
+    apartment_id,
+    apartment_name,
+    apartment_country,
+    apartment_city,
+    apartment_state,
+    apartment_full_address,
+    apartment_due_amount,
+    apartment_license,
+    record_status
+  ) {
+    this.apartment_id = apartment_id;
+    this.apartment_name = apartment_name;
+    this.apartment_country = apartment_country;
+    this.apartment_city = apartment_city;
+    this.apartment_state = apartment_state;
+    this.apartment_full_address = apartment_full_address;
+    this.apartment_due_amount = apartment_due_amount;
+    this.apartment_license = apartment_license;
+    this.record_status = record_status;
+  }
+
+  static async create(
+    apartment_name,
+    apartment_country,
+    apartment_city,
+    apartment_state,
+    apartment_full_address,
+    apartment_due_amount,
+    apartment_license,
+    record_status
+  ) {
+    const apartment_id = generateApartmentId();
+    const queryText =
+      "INSERT INTO apartment (apartment_id, apartment_name, apartment_country, apartment_city, apartment_state, apartment_full_address, apartment_due_amount, apartment_license, record_status) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9)";
+    const values = [
+      apartment_id,
+      apartment_name,
+      apartment_country,
+      apartment_city,
+      apartment_state,
+      apartment_full_address,
+      apartment_due_amount,
+      apartment_license,
+      record_status,
+    ];
+
+    try {
+      await client.query(queryText, values);
+      return apartment_id;
+    } catch (error) {
+      console.error("Error executing create query: ", error);
     }
+  }
 
-    static async create(apartment_name, apartment_country, apartment_city, apartment_state, apartment_full_address, apartment_due_amount, apartment_license, record_status){
-        const apartment_id = generateApartmentId();
-        const queryText = 'INSERT INTO apartment (apartment_id, apartment_name, apartment_country, apartment_city, apartment_state, apartment_full_address, apartment_due_amount, apartment_license, record_status) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9)';
-        const values = [apartment_id, apartment_name, apartment_country, apartment_city, apartment_state, apartment_full_address, apartment_due_amount, apartment_license, record_status];
+  static async createTill(apartment_id, block_id) {
+    const queryText =
+      "INSERT INTO till_info (till_name, apartment_id, block_id, total_expected_revenue, total_expected_expense, current_revenue, current_expense) VALUES($1, $2, $3, $4, $5, $6, $7)";
+    const values = ["Cash", apartment_id, block_id, 0, 0, 0, 0];
+    const posValues = ["Pos", apartment_id, block_id, 0, 0, 0, 0];
 
-        try{
-            await client.query(queryText, values);
-            return apartment_id;
-        } catch (error){
-            console.error('Error executing create query: ', error);
-        }
+    try {
+      await client.query(queryText, values);
+      await client.query(queryText, posValues);
+      return true;
+    } catch (error) {
+      console.log("Error creating till info: ", error);
     }
+  }
 
-    static async createTill(apartment_id, block_id){
-        const queryText = 'INSERT INTO till_info (till_name, apartment_id, block_id, total_expected_revenue, total_expected_expense, current_revenue, current_expense) VALUES($1, $2, $3, $4, $5, $6, $7)';
-        const values = ['Cash', apartment_id, block_id, 0, 0, 0, 0];
-        const posValues = ['Pos', apartment_id, block_id, 0, 0, 0, 0];
+  static async createRelation(manager_id, apartment_id) {
+    const queryText =
+      "INSERT INTO manager_apartment_relation (manager_id, apartment_id) VALUES($1,$2)";
+    const values = [manager_id, apartment_id];
 
-        try{
-            await client.query(queryText, values);
-            await client.query(queryText, posValues);
-            return true;
-        } catch (error){
-            console.log('Error creating till info: ', error);
-        }
+    try {
+      const result = await client.query(queryText, values);
+      return result.rows[0];
+    } catch (error) {
+      console.error("Error creating relation query: ", error);
     }
+  }
 
-    static async createRelation(manager_id, apartment_id){
-        const queryText = 'INSERT INTO manager_apartment_relation (manager_id, apartment_id) VALUES($1,$2)';
-        const values = [manager_id, apartment_id];
+  static async getRelationApartment(manager_id) {
+    const queryText =
+      "SELECT * FROM manager_apartment_relation WHERE manager_id = $1";
+    const values = [manager_id];
 
-        try{
-            const result = await client.query(queryText, values);
-            return result.rows[0]
-        }catch (error){
-            console.error('Error creating relation query: ', error);
-        }
+    try {
+      const result = await client.query(queryText, values);
+      return result.rows;
+    } catch (error) {
+      console.error("Error getting relation apartment: ", error);
     }
+  }
 
-    static async getRelationApartment(manager_id){
-        const queryText = 'SELECT * FROM manager_apartment_relation WHERE manager_id = $1';
-        const values = [manager_id];
-
-        try{
-            const result = await client.query(queryText, values);
-            return result.rows;
-        } catch (error){
-            console.error('Error getting relation apartment: ', error);
-        }
-    }
-
-    static async getApartmentDetailById(apartment_id){
-        const queryText = `
+  static async getApartmentDetailById(apartment_id) {
+    const queryText = `
         SELECT
             ai.apartment_id,
             ai.apartment_name,
@@ -114,18 +147,18 @@ class Apartment{
             ai.apartment_due_amount,
             ai.apartment_license;
     `;
-        const values = [apartment_id];
+    const values = [apartment_id];
 
-        try{
-            const result = await client.query(queryText, values);
-            return result.rows[0];
-        } catch (error){
-            console.error('Error getting relation apartment: ', error);
-        }
+    try {
+      const result = await client.query(queryText, values);
+      return result.rows[0];
+    } catch (error) {
+      console.error("Error getting relation apartment: ", error);
     }
+  }
 
-    static async getApartmentDetail(manager_id, apartment_id){
-        const queryText = `
+  static async getApartmentDetail(manager_id, apartment_id) {
+    const queryText = `
         SELECT
             ai.apartment_id,
             ai.apartment_name,
@@ -171,79 +204,88 @@ class Apartment{
             ai.apartment_due_amount,
             ai.apartment_license;
     `;
-        const values = [manager_id, apartment_id];
+    const values = [manager_id, apartment_id];
 
-        try{
-            const result = await client.query(queryText, values);
-            return result.rows;
-        } catch (error){
-            console.error('Error getting relation apartment: ', error);
-        }
+    try {
+      const result = await client.query(queryText, values);
+      return result.rows;
+    } catch (error) {
+      console.error("Error getting relation apartment: ", error);
     }
+  }
 
-    static async updateApartmentInfo(apartment_id, apartment_name, apartment_full_address, apartment_due_amount){
-        try{
-            const updateFields = [
-                "apartment_name",
-                "apartment_full_address",
-                "apartment_due_amount"
-            ]
+  static async updateApartmentInfo(
+    apartment_id,
+    apartment_name,
+    apartment_full_address,
+    apartment_due_amount
+  ) {
+    try {
+      const updateFields = [
+        "apartment_name",
+        "apartment_full_address",
+        "apartment_due_amount",
+      ];
 
-            const updateValues = [
-                apartment_name, apartment_full_address, apartment_due_amount
-            ];
+      const updateValues = [
+        apartment_name,
+        apartment_full_address,
+        apartment_due_amount,
+      ];
 
-            const queryText = `
+      const queryText = `
                 UPDATE apartment 
-                SET ${updateFields.map((field, index) => `${field} = $${index + 1}`).join(", ")}
+                SET ${updateFields
+                  .map((field, index) => `${field} = $${index + 1}`)
+                  .join(", ")}
                 WHERE apartment_id = $${updateFields.length + 1} RETURNING *
             `;
 
-            const values = [...updateValues, apartment_id];
+      const values = [...updateValues, apartment_id];
 
-            const result = await client.query(queryText, values);
-            return result.rows[0];
-        } catch (error) {
-            console.error('Yönetici bilgileri güncellenirken hata oluştu: ', error);
-        }
+      const result = await client.query(queryText, values);
+      return result.rows[0];
+    } catch (error) {
+      console.error("Yönetici bilgileri güncellenirken hata oluştu: ", error);
     }
+  }
 
-    static async getBlockInfoByApartmentId(apartment_id){
-        const queryText = 'SELECT * FROM blocks WHERE apartment_id = $1';
-        const values = [apartment_id];
+  static async getBlockInfoByApartmentId(apartment_id) {
+    const queryText = "SELECT * FROM blocks WHERE apartment_id = $1";
+    const values = [apartment_id];
 
-        try{
-            const result = await client.query(queryText, values);
-            return result.rows;
-        } catch (error) {
-            console.error('Blok bilgileri alınırken hata oluştu: ', error);
-        }
+    try {
+      const result = await client.query(queryText, values);
+      return result.rows;
+    } catch (error) {
+      console.error("Blok bilgileri alınırken hata oluştu: ", error);
     }
+  }
 
-    static async getUnitInfoByBlockId(block_id){
-        const queryText = 'SELECT * FROM units WHERE block_id = $1';
-        const values = [block_id];
+  static async getUnitInfoByBlockId(block_id) {
+    const queryText = "SELECT * FROM units WHERE block_id = $1";
+    const values = [block_id];
 
-        try{
-            const result = await client.query(queryText, values);
-            return result.rows;
-        } catch (error) {
-            console.error('Daire bilgileri alınırken hata oluştu: ', error);
-        }
+    try {
+      const result = await client.query(queryText, values);
+      return result.rows;
+    } catch (error) {
+      console.error("Daire bilgileri alınırken hata oluştu: ", error);
     }
+  }
 }
 
 function generateApartmentId() {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0');
-    const milliseconds = String(now.getMilliseconds()).padStart(3, '0');
-  
-    return `${year}${month}${day}${hours}${minutes}${seconds}${milliseconds}`;
-  }
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  const hours = String(now.getHours()).padStart(2, "0");
+  const minutes = String(now.getMinutes()).padStart(2, "0");
+  const seconds = String(now.getSeconds()).padStart(2, "0");
+  const milliseconds = String(now.getMilliseconds()).padStart(3, "0");
+
+  return `${year}${month}${day}${hours}${minutes}${seconds}${milliseconds}`;
+}
 
 module.exports = { Apartment };
