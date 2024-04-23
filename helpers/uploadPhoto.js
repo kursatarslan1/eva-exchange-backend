@@ -4,12 +4,15 @@ const fs = require("fs");
 const path = require("path");
 
 const generateUniqueFileName = (fileName) => {
-  // Dosya adını oluştururken base64 verisine ihtiyacımız yok, sadece dosya adını kullanacağız
-  const timestamp = Date.now();
-  const randomString = Math.random().toString(36).substring(2, 8);
+  try{
+    const timestamp = Date.now();
+    const randomString = Math.random().toString(36).substring(2, 8);
   const extension = fileName.split(".").pop();
   const uniqueFileName = `${timestamp}_${randomString}.${extension}`;
   return uniqueFileName;
+  } catch (error){
+    return false;
+  }
 };
 
 const uploadPhoto = async (base64Image, fileName) => {

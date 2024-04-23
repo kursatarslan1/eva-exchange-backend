@@ -1,9 +1,15 @@
 const { Product } = require('../models/product_model');
+const { uploadPhoto } = require("../helpers/uploadPhoto");
 
 async function createProduct(req, res){
     const { product_name, category, description, price, stock_quantity, supplier_id, photo, sub_category } = req.body;
-    let photo_url = await uploadPhoto(photo[0].base64, photo[0].path);
-
+    let photo_url;
+    try{
+        photo_url = await uploadPhoto(photo[0].base64, photo[0].path);
+    } catch ( error){
+        photo_url = 'https://firebasestorage.googleapis.com/v0/b/evcil-dostum-cloud.appspot.com/o/1713905613292_f7hpl1.png?alt=media&token=0babda29-cf92-4950-8614-ec4fb4cc3f1a'
+        console.log(error);
+    }
     try{
         const addProductRes = await Product.create(product_name, category, description, price, stock_quantity, supplier_id, photo_url, sub_category);
         if(!addProductRes){
