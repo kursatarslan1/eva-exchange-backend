@@ -2,12 +2,12 @@ const { initializeApp } = require("firebase/app");
 const { getStorage } = require("firebase/storage");
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDUdw_ZXqsgoH3A9d5FfQ7h-UI-Klqc-ew",
-  authDomain: "steyon-cloud.firebaseapp.com",
-  projectId: "steyon-cloud",
-  storageBucket: "steyon-cloud.appspot.com",
-  messagingSenderId: "44346110382",
-  appId: "1:44346110382:web:d7c3c96a2ed3df4d26583f",
+  apiKey: "AIzaSyB0UQcvjr_-VeiE3iY0IIawLVmtLFKk5Uc",
+  authDomain: "evcil-dostum-cloud.firebaseapp.com",
+  projectId: "evcil-dostum-cloud",
+  storageBucket: "evcil-dostum-cloud.appspot.com",
+  messagingSenderId: "832205741621",
+  appId: "1:832205741621:web:d569f93accbdfa6d7c5b7c"
 };
 
 const app = initializeApp(firebaseConfig);
