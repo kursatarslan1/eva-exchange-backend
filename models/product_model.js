@@ -13,15 +13,26 @@ class Product{
         this.sub_category = sub_category;
     }
 
-    static async create(product_name, category, description, price, stock_quantity, supplier_id, photo_url, sub_category){
-        const queryText = 'INSERT INTO products (product_name, category, description, price, stock_quantity, supplier_id, photo_url, sub_category) VALUES($1, $2, $3, $4, $5, $6, $7, $8);';
-        const values = [product_name, category, description, price, stock_quantity, supplier_id, photo_url, sub_category];
+    static async create(product_name, category, description, price, photo_url, sub_category){
+        const queryText = 'INSERT INTO products (product_name, category, description, price, photo_url, sub_category) VALUES($1, $2, $3, $4, $5, $6);';
+        const values = [product_name, category, description, price, photo_url, sub_category];
 
         try{
             await client.query(queryText, values);
             return true;
         } catch (error){
             console.log('Error creating product: ', error);
+        }
+    }
+
+    static async getAllProduct(){
+        const queryText = 'SELECT * FROM products;';
+
+        try{
+            const result = await client.query(queryText, []);
+            return result.rows;
+        } catch (error){
+            console.log('Error getting products')
         }
     }
 
@@ -47,9 +58,9 @@ class Product{
         }
     }
 
-    static async updateProductById(product_id, category, description, price, stock_quantity, supplier_id, photo_url){
-        const queryText = 'UPDATE product SET category=$2, description=$3, price=$4, stock_quantity=$5, supplier_id=$6, photo_url=$7 WHERE product_id=$1;';
-        const values = [product_id, category, description, price, stock_quantity, supplier_id, photo_url];
+    static async updateProductById(product_id, category, description, price, photo_url){
+        const queryText = 'UPDATE product SET category=$2, description=$3, price=$4, photo_url=$5 WHERE product_id=$1;';
+        const values = [product_id, category, description, price,  photo_url];
 
         try{
             await client.query(queryText, values);

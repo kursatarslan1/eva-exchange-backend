@@ -16,7 +16,7 @@ app.use(express.json({ extended: true, limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 
-app.use("/evcildostum/product", productRoutes);
+app.use("/fatih/product", productRoutes);
 
 const PORT = 3000;
 

@@ -2,7 +2,7 @@ const { Product } = require('../models/product_model');
 const { uploadPhoto } = require("../helpers/uploadPhoto");
 
 async function createProduct(req, res){
-    const { product_name, category, description, price, stock_quantity, supplier_id, photo, sub_category } = req.body;
+    const { product_name, category, description, price, photo, sub_category } = req.body;
     let photo_url;
     try{
         photo_url = await uploadPhoto(photo[0].base64, photo[0].path);
@@ -11,7 +11,7 @@ async function createProduct(req, res){
         console.log(error);
     }
     try{
-        const addProductRes = await Product.create(product_name, category, description, price, stock_quantity, supplier_id, photo_url, sub_category);
+        const addProductRes = await Product.create(product_name, category, description, price, photo_url, sub_category);
         if(!addProductRes){
             res.status(505).json({ success: false });
             console.log('Error product controller');
@@ -20,6 +20,16 @@ async function createProduct(req, res){
     } catch (error){
         res.status(505).json({ success: false });
         console.log('Error product controller: ', error);
+    }
+}
+
+async function getAllProduct(req, res){
+    try{
+        const result = await Product.getAllProduct();
+        res.json({ result });
+    } catch (error){
+        res.status(505).json({ success: false });
+        console.log('Error gettin all product: ', error);
     }
 }
 
@@ -71,4 +81,4 @@ async function deleteProductById(req, res){
     }
 }
 
-module.exports = { createProduct, getProductById, getProductByCategory, updateProductById, deleteProductById };
+module.exports = { createProduct, getAllProduct, getProductById, getProductByCategory, updateProductById, deleteProductById };
