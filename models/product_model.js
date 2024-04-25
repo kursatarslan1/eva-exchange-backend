@@ -59,7 +59,7 @@ class Product{
     }
 
     static async updateProductById(product_id, category, description, price, photo_url){
-        const queryText = 'UPDATE product SET category=$2, description=$3, price=$4, photo_url=$5 WHERE product_id=$1;';
+        const queryText = 'UPDATE products SET category=$2, description=$3, price=$4, photo_url=$5 WHERE product_id=$1;';
         const values = [product_id, category, description, price,  photo_url];
 
         try{
@@ -71,7 +71,7 @@ class Product{
     }
 
     static async deleteProductById(product_id){
-        const queryText = 'DELETE FROM product WHERE product_id = $1;';
+        const queryText = 'DELETE FROM products WHERE product_id = $1;';
         
         try{
             await client.query(queryText, [product_id]);
