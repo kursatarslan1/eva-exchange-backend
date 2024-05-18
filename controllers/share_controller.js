@@ -1,14 +1,14 @@
-const { Share } = require("../models/share_model");
-const { User } = require("../models/users_model");
-const { Portfolio } = require("../models/portfolio_model");
-const { Market } = require("../models/market_model");
+const Share = require("../models/Shares");
+const User = require("../models/Users");
+const Portfolio = require("../models/Portfolio");
+const Market = require("../models/Market");
 const { ShareSymbolValidation } = require("../helpers/check_symbol_validity");
 
 async function getShareByShareSymbol(req, res) {
     const { symbol } = req.query;
 
     try {
-        const share = await Share.GetShareByShareSymbol(symbol);
+        const share = await Share.findOne({ where: { symbol } });
 
         if (!share) {
             return res.status(400).json({ error: "Share Not Found" });
@@ -17,85 +17,85 @@ async function getShareByShareSymbol(req, res) {
         res.json({ share });
     } catch (error) {
         console.error("Error getting share by symbol - in share controller: " + error);
-        res.status(400).json({ error: "Unexpected error" });
+        res.status(500).json({ error: "Unexpected error" });
     }
 }
 
 async function getAllShares(req, res) {
     try {
-        const shares = await Share.getAllShares();
+        const shares = await Share.findAll();
 
-        if (!shares) {
-            return res.status(400).json({ error: "Share Not Found" });
+        if (!shares || shares.length === 0) {
+            return res.status(400).json({ error: "Shares Not Found" });
         }
         res.json({ shares });
     } catch (error) {
         console.error("Error getting shares - in share controller: " + error);
-        res.status(400).json({ error: "Unexpected error" });
+        res.status(500).json({ error: "Unexpected error" });
     }
 }
 
 async function buyShare(req, res) {
     const { user_id, market_id, quantity } = req.body;
-    const marketInfo = await Market.GetShareInfoByMarketId(market_id);
+    const marketInfo = await Market.findByPk(market_id);
 
-    if(!marketInfo){
-        return res.status(400).json({ error: 'market not found' });
+    if (!marketInfo) {
+        return res.status(400).json({ error: 'Market Not Found' });
     }
     
-    const validateUser = await User.GetUserById(user_id);
+    const validateUser = await User.findByPk(user_id);
     if (!validateUser) {
-        return res.status(400).json({ error: 'user not found' });
+        return res.status(400).json({ error: 'User Not Found' });
     }
     
-    const buyer_portfolio_id = await Portfolio.GetOrCreatePortfolio(user_id, marketInfo.share_symbol);
+    const buyer_portfolio = await Portfolio.GetOrCreatePortfolio(user_id, marketInfo.share_symbol);
     try {
-        const userBalance = await User.GetBalanceByUserId(user_id);
+        const userBalance = validateUser.cash;
         const symbolIsValid = await ShareSymbolValidation(marketInfo.share_symbol);
         if (!symbolIsValid) {
-            return res.status(400).json({ error: 'symbol is not valid.' });
+            return res.status(400).json({ error: 'Symbol is not valid.' });
         } else if (quantity > marketInfo.quantity) {
-            return res.status(400).json({ error: 'quantity cannot be bigger than total quantity.' });
+            return res.status(400).json({ error: 'Quantity cannot be bigger than total quantity.' });
         } else if (quantity * marketInfo.price > userBalance) {
-            return res.status(400).json({ error: 'sufficient balance' });
+            return res.status(400).json({ error: 'Insufficient balance' });
         }
 
-        const buy = await Share.buyShare(marketInfo, buyer_portfolio_id, quantity);
+        const buy = await Share.buyShare(marketInfo, buyer_portfolio, quantity);
         if (!buy) {
             return res.status(400).json({ error: 'Unexpected Error' });
         }
         return res.json({ success: true });
     } catch (error) {
         console.error("Error buying share - in share controller: " + error);
-        res.status(400).json({ error: "Unexpected error" });
+        res.status(500).json({ error: "Unexpected error" });
     }
 }
 
 async function sellShare(req, res) {
-    const {share_symbol, portfolio_id, quantity, price } = req.body;
+    const { share_symbol, portfolio_id, quantity, price } = req.body;
 
     try {
         const user_id = await Portfolio.GetUserIdByPortfolioId(portfolio_id);
         const symbolIsValid = await ShareSymbolValidation(share_symbol);
         const userShareQuantity = await Portfolio.GetShareQuantity(user_id, share_symbol);
         if (!user_id) {
-            return res.status(400).json({ error: 'user not found' });
+            return res.status(400).json({ error: 'User Not Found' });
         }
         if (!symbolIsValid) {
-            return res.status(400).json({ error: 'symbol is not valid' });
+            return res.status(400).json({ error: 'Symbol is not valid' });
         }
         if (quantity > userShareQuantity) {
-            return res.status(400).json({ error: 'sufficient quantity' });
+            return res.status(400).json({ error: 'Insufficient quantity' });
         }
 
         const sell = await Share.sellShare(user_id, share_symbol, portfolio_id, quantity, price, userShareQuantity);
         if (!sell) {
-            return res.status(400).json({ error: 'something went wrong, i believe i can fly' });
+            return res.status(400).json({ error: 'Something went wrong' });
         }
-        return res.json({ succes: true });
+        return res.json({ success: true });
     } catch (error) {
         console.error("Error selling share - in share controller: " + error);
-        res.status(400).json({ error: "Unexpected error" });
+        res.status(500).json({ error: "Unexpected error" });
     }
 }
 

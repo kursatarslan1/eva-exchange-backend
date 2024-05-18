@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "R_esidenT1.2460!",
+    "database": "eva-exchange",
+    "host": "89.252.184.44",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "postgres",
+    "password": "R_esidenT1.2460!",
+    "database": "eva-exchange",
+    "host": "89.252.184.44",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "postgres",
+    "password": "R_esidenT1.2460!",
+    "database": "eva-exchange",
+    "host": "89.252.184.44",
+    "dialect": "postgres"
+  }
+}

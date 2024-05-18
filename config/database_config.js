@@ -1,9 +1,10 @@
-const dbConfig = {
-    user: 'postgres',
-    host: '89.252.184.44',
-    database: 'eva-exchange',
-    password: 'R_esidenT1.2460!',
-    port: 5432,
-};
+const { Sequelize } = require('sequelize');
 
-module.exports = dbConfig;
+const sequelize = new Sequelize('eva-exchange', 'postgres', 'R_esidenT1.2460!', {
+    host: '89.252.184.44',
+    dialect: 'postgres',
+    port: 5432,
+    logging: false 
+});
+
+module.exports = sequelize;
