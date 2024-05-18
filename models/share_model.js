@@ -2,6 +2,7 @@ const { client } = require("../middleware/database");
 const { Market } = require("../models/market_model");
 const { Portfolio } = require("../models/portfolio_model");
 const { User } = require("../models/users_model");
+const { Trade } = require("../models/trade_model");
 
 class Share{
     constructor(id, symbol, price, last_updated){
@@ -34,11 +35,13 @@ class Share{
     }
 
     static async buyShare(marketInfo, buyer_portfolio_id, quantity){
-        const buyer_user_id = await Portfolio.getUserIdByPortfolioId(buyer_portfolio_id);
-        const shareQuantity = await Portfolio.getShareQuantity(buyer_user_id, marketInfo.share_symbol);
+        const buyer_user_id = await Portfolio.GetUserIdByPortfolioId(buyer_portfolio_id);
+        const shareQuantity = await Portfolio.GetShareQuantity(buyer_user_id, marketInfo.share_symbol);
 
         const queryText = 'UPDATE portfolio SET quantity = $1 WHERE portfolio_id = $2;';
         const values = [shareQuantity + quantity, buyer_portfolio_id];
+
+        const currentTime = new Date();
 
         try{
             const result = await client.query(queryText, values);
@@ -49,11 +52,15 @@ class Share{
 
                 await client.query(updateBuyerBalanceQueryText, buyerValues);
 
-                const seller_user_id = await Portfolio.getUserIdByPortfolioId(marketInfo.seller_portfolio_id);
+                const seller_user_id = await Portfolio.GetUserIdByPortfolioId(marketInfo.seller_portfolio_id);
                 const sellerUserBalance = await User.GetBalanceByUserId(seller_user_id);
 
                 const updateSellerBalanceQueryText = 'UPDATE users SET cash = $1 WHERE user_id= $2;';
                 const sellerValues = [Number(sellerUserBalance) + Number((quantity*(marketInfo.price))), seller_user_id];
+
+                if(!buyerUserBalance || !sellerUserBalance){
+                    return false;
+                }
 
                 await client.query(updateSellerBalanceQueryText, sellerValues);
                 
@@ -66,10 +73,15 @@ class Share{
 
                     await client.query(updateRemainQuantityQueryText, updateRemainQuantityValues);
                 }
-                return true;
+            const tradeResult = await Trade.AddTradeLog(marketInfo.seller_portfolio_id, buyer_portfolio_id, marketInfo.share_symbol, quantity, marketInfo.price, currentTime);
+            if(!tradeResult){
+                return false;
+            }
+            return true;
             }
         } catch (error){
             console.log(error);
+            return false;
         }
     }
 

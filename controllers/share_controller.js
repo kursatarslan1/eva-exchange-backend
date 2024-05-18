@@ -38,6 +38,10 @@ async function getAllShares(req, res) {
 async function buyShare(req, res) {
     const { user_id, market_id, quantity } = req.body;
     const marketInfo = await Market.GetShareInfoByMarketId(market_id);
+
+    if(!marketInfo){
+        return res.status(400).json({ error: 'market not found' });
+    }
     
     const validateUser = await User.GetUserById(user_id);
     if (!validateUser) {
@@ -71,9 +75,9 @@ async function sellShare(req, res) {
     const {share_symbol, portfolio_id, quantity, price } = req.body;
 
     try {
-        const user_id = await Portfolio.getUserIdByPortfolioId(portfolio_id);
+        const user_id = await Portfolio.GetUserIdByPortfolioId(portfolio_id);
         const symbolIsValid = await ShareSymbolValidation(share_symbol);
-        const userShareQuantity = await Portfolio.getShareQuantity(user_id, share_symbol);
+        const userShareQuantity = await Portfolio.GetShareQuantity(user_id, share_symbol);
         if (!user_id) {
             return res.status(400).json({ error: 'user not found' });
         }

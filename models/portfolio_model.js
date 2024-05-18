@@ -19,7 +19,7 @@ class Portfolio{
         }
     }
 
-    static async getUserIdByPortfolioId(portfolio_id){
+    static async GetUserIdByPortfolioId(portfolio_id){
         const queryText = 'SELECT user_id FROM portfolio WHERE portfolio_id = $1;';
 
         try{
@@ -30,7 +30,20 @@ class Portfolio{
             return false;
         }
     }
-    static async getShareQuantity(user_id, share_symbol){
+
+    static async GetPortfolioIdsByUserId(user_id){
+        const queryText = 'SELECT portfolio_id FROM portfolio WHERE user_id=$1;';
+
+        try{
+            const result = await client.query(queryText, [user_id]);
+            return result.rows;
+        } catch(error){
+            console.log('error getting portfolio id by user id: ', error);
+            return false;
+        }
+    }
+
+    static async GetShareQuantity(user_id, share_symbol){
         const queryText = 'SELECT quantity FROM portfolio WHERE user_id = $1 AND share_symbol = $2;';
         const values = [user_id , share_symbol];
         try{

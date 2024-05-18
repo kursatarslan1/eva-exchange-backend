@@ -24,8 +24,8 @@ async function RemoveShareFromMarket(req, res){
     if(!marketInfo){
         return res.status(400).json({ error: "Market Not Found" });
     }
-    const sellerUserId = await Portfolio.getUserIdByPortfolioId(marketInfo.seller_portfolio_id);
-    const shareQuantity = await Portfolio.getShareQuantity(user_id,marketInfo.share_symbol);
+    const sellerUserId = await Portfolio.GetUserIdByPortfolioId(marketInfo.seller_portfolio_id);
+    const shareQuantity = await Portfolio.GetShareQuantity(user_id,marketInfo.share_symbol);
 
     try{
         if(user_id != sellerUserId){
