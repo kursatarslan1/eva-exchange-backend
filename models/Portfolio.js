@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database_config');
+const User  = require('../models/Users');
 
 const Portfolio = sequelize.define('Portfolio', {
     portfolio_id: {
@@ -63,7 +64,7 @@ Portfolio.GetShareQuantity = async function(user_id, share_symbol) {
     }
 };
 
-Portfolio.GetOrCreatePortfolio = async function(user_id, share_symbol) {
+Portfolio.GetOrCreatePortfolio = async function(user_id, share_symbol) { // when a user buys a share, it is checked whether the user has a portfolio for that share or not, or it is created.
     try {
         let portfolio = await Portfolio.findOne({ where: { user_id, share_symbol } });
         if (!portfolio) {
@@ -75,5 +76,16 @@ Portfolio.GetOrCreatePortfolio = async function(user_id, share_symbol) {
         return false;
     }
 };
+
+Portfolio.GetUserPortfolio = async function(user_id){ // Returns the portfolio owned by the user
+    try{
+        const userBalance = await User.GetBalanceByUserId(user_id);
+        const portfolio = await Portfolio.findAll({ where: { user_id: user_id } });
+        return { userBalance, portfolio };
+    } catch (error) {
+        console.log('Error getting portfolio: ', error);
+        return false;
+    }
+}
 
 module.exports = Portfolio;

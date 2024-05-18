@@ -1,20 +1,10 @@
 const Trade = require("../models/Trades");
-const sequelize = require('../config/database_config');
-const { Op } = require('sequelize');
 
 async function getTradesByPortfolioId(req, res) {
     const { portfolio_id } = req.query;
 
     try {
-        const trades = await Trade.findAll({
-            where: {
-                [Op.or]: [
-                    { seller_portfolio_id: portfolio_id },
-                    { buyer_portfolio_id: portfolio_id }
-                ]
-            }
-        });
-
+        const trades = await Trade.getTradesByPortfolioId(portfolio_id);
         if (!trades || trades.length === 0) {
             return res.status(401).json({ error: "Trades Not Found" });
         }
@@ -26,7 +16,7 @@ async function getTradesByPortfolioId(req, res) {
     }
 }
 
-async function GetBuyHistory(req, res) {
+async function GetBuyHistory(req, res) { // get user buy history by user_id
     const { user_id } = req.query;
     
     try {
@@ -41,7 +31,7 @@ async function GetBuyHistory(req, res) {
     }
 }
 
-async function GetSellHistory(req, res) {
+async function GetSellHistory(req, res) { // get user sell history by user_id
     const { user_id } = req.query;
 
     try {

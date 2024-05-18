@@ -2,6 +2,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database_config');
 const Portfolio = require('./Portfolio');
+const { Op } = require('sequelize');
 
 const Trade = sequelize.define('Trade', {
     trade_id: {
@@ -43,7 +44,7 @@ Trade.getTradesByPortfolioId = async function(portfolio_id) {
     try {
         return await Trade.findAll({
             where: {
-                [sequelize.Op.or]: [
+                [Op.or]: [
                     { seller_portfolio_id: portfolio_id },
                     { buyer_portfolio_id: portfolio_id }
                 ]

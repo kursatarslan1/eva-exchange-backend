@@ -1,6 +1,7 @@
 // models/Market.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database_config');
+const Portfolio = require('../models/Portfolio');
 
 const Market = sequelize.define('Market', {
     id: {
@@ -34,7 +35,7 @@ const Market = sequelize.define('Market', {
     timestamps: false
 });
 
-Market.GetMarket = async function() {
+Market.GetMarket = async function() { // all share on market
     try {
         return await Market.findAll();
     } catch (error) {
@@ -42,7 +43,7 @@ Market.GetMarket = async function() {
     }
 };
 
-Market.AddMarket = async function(share_symbol, seller_portfolio_id, quantity, price) {
+Market.AddMarket = async function(share_symbol, seller_portfolio_id, quantity, price) { 
     const today = new Date();
     try {
         const market = await Market.create({
@@ -59,7 +60,7 @@ Market.AddMarket = async function(share_symbol, seller_portfolio_id, quantity, p
     }
 };
 
-Market.GetShareInfoByMarketId = async function(market_id) {
+Market.GetShareInfoByMarketId = async function(market_id) { 
     try {
         return await Market.findByPk(market_id, {
             attributes: ['share_symbol', 'seller_portfolio_id', 'quantity', 'price', 'id', 'last_updated']

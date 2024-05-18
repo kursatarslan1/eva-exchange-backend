@@ -1,12 +1,12 @@
 const Market = require("../models/Market");
 const Portfolio = require("../models/Portfolio");
 
-async function GetMarket(req, res) {
+async function GetMarket(req, res) { // Get All share on sale
     try {
         const market = await Market.findAll();
 
         if (!market || market.length === 0) {
-            return res.status(400).json({ error: "Market Not Found" });
+            return res.status(400).json({ error: "Market Not Found" }); // there is no share on sale
         }
 
         res.json({ market });
@@ -20,10 +20,10 @@ async function RemoveShareFromMarket(req, res) {
     const { user_id, market_id } = req.query;
 
     try {
-        const marketInfo = await Market.findByPk(market_id);
+        const marketInfo = await Market.findByPk(market_id); // get share information from market
 
         if (!marketInfo) {
-            return res.status(400).json({ error: "Market Not Found" });
+            return res.status(400).json({ error: "Market Not Found" }); 
         }
 
         const sellerUserId = await Portfolio.GetUserIdByPortfolioId(marketInfo.seller_portfolio_id);
@@ -61,7 +61,7 @@ async function UpdatePriceByMarketId(req, res) {
         const timeDifference = currentTime - lastUpdatedDate;
         const differenceInHours = timeDifference / (1000 * 60 * 60);
 
-        if (differenceInHours >= 1) {
+        if (differenceInHours >= 1) { // cannot update price before one hour after creating/updating
             await Market.update({ price: new_price, last_updated: currentTime }, { where: { id: market_id } });
             return res.json({ success: 'Price update successful.' });
         } else {

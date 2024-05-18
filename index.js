@@ -1,9 +1,7 @@
 const express = require('express');
 const app = express();
-const { Sequelize } = require('sequelize');
-const sequelize = require("./config/database_config"); // dbConfig yerine sequelize
+const sequelize = require("./config/database_config"); 
 
-// Geri kalan kodlar buraya eklenecek
 const userRoutes = require("./routes/users_routes");
 const tradeRoutes = require("./routes/trade_routes.js");
 const shareRoutes = require("./routes/share_routes.js");
@@ -19,14 +17,13 @@ app.set("trust proxy", true);
 app.use(express.json({ extended: true, limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-// sequelize değişkeni doğrudan kullanılacak
 sequelize.authenticate()
   .then(() => {
-    console.log('Veritabanı bağlantısı başarılı.');
+    console.log('Database connection is success.');
     startServer();
   })
   .catch(error => {
-    console.error('Veritabanı bağlantısı başarısız:', error);
+    console.error('Database connection is failed:', error);
   });
 
   const startServer = () => {
@@ -46,6 +43,6 @@ sequelize.authenticate()
     const PORT = 3000;
   
     app.listen(PORT, () => {
-      console.log("Uygulama çalışıyor!");
+      console.log("Application up!");
     });
   };

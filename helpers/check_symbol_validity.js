@@ -6,7 +6,7 @@ async function ShareSymbolValidation(symbol) {
         
         return !!share;
     } catch (error) {
-        console.error('Veritabanı hatası:', error);
+        console.error('Database error:', error);
         throw error;
     }
 }

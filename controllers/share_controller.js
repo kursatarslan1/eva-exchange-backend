@@ -10,7 +10,7 @@ async function getShareByShareSymbol(req, res) {
     try {
         const share = await Share.findOne({ where: { symbol } });
 
-        if (!share) {
+        if (!share) { 
             return res.status(400).json({ error: "Share Not Found" });
         }
 
@@ -21,7 +21,7 @@ async function getShareByShareSymbol(req, res) {
     }
 }
 
-async function getAllShares(req, res) {
+async function getAllShares(req, res) { 
     try {
         const shares = await Share.findAll();
 
@@ -39,7 +39,7 @@ async function buyShare(req, res) {
     const { user_id, market_id, quantity } = req.body;
     const marketInfo = await Market.findByPk(market_id);
 
-    if (!marketInfo) {
+    if (!marketInfo) { // validate market
         return res.status(400).json({ error: 'Market Not Found' });
     }
     
@@ -48,19 +48,19 @@ async function buyShare(req, res) {
         return res.status(400).json({ error: 'User Not Found' });
     }
     
-    const buyer_portfolio = await Portfolio.GetOrCreatePortfolio(user_id, marketInfo.share_symbol);
+    const buyer_portfolio = await Portfolio.GetOrCreatePortfolio(user_id, marketInfo.share_symbol); // get buyer portfolio by user_id and share_symbol
     try {
-        const userBalance = validateUser.cash;
-        const symbolIsValid = await ShareSymbolValidation(marketInfo.share_symbol);
+        const userBalance = validateUser.cash; // get user balance
+        const symbolIsValid = await ShareSymbolValidation(marketInfo.share_symbol); // check share symbol is valid
         if (!symbolIsValid) {
             return res.status(400).json({ error: 'Symbol is not valid.' });
-        } else if (quantity > marketInfo.quantity) {
+        } else if (quantity > marketInfo.quantity) { // if the quantity demanded is greater than the quantity in the market: 
             return res.status(400).json({ error: 'Quantity cannot be bigger than total quantity.' });
-        } else if (quantity * marketInfo.price > userBalance) {
+        } else if (quantity * marketInfo.price > userBalance) { // if the money to be paid is more than money user have:
             return res.status(400).json({ error: 'Insufficient balance' });
         }
 
-        const buy = await Share.buyShare(marketInfo, buyer_portfolio, quantity);
+        const buy = await Share.buyShare(marketInfo, buyer_portfolio, quantity); // if all conditions are met:
         if (!buy) {
             return res.status(400).json({ error: 'Unexpected Error' });
         }
@@ -78,6 +78,7 @@ async function sellShare(req, res) {
         const user_id = await Portfolio.GetUserIdByPortfolioId(portfolio_id);
         const symbolIsValid = await ShareSymbolValidation(share_symbol);
         const userShareQuantity = await Portfolio.GetShareQuantity(user_id, share_symbol);
+        //validation
         if (!user_id) {
             return res.status(400).json({ error: 'User Not Found' });
         }

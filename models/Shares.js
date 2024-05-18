@@ -72,7 +72,7 @@ Share.buyShare = async function(marketInfo, buyer_portfolio_id, quantity) {
             { where: { user_id: seller_user_id } }
         );
 
-        if (marketInfo.quantity === quantity) {
+        if (marketInfo.quantity === quantity) { // if the number of shares in the market is the same as the number of shares purchased, there is no need for that share to remain in the market
             await Market.Delist(marketInfo.id);
         } else {
             const remainQuantity = marketInfo.quantity - quantity;
