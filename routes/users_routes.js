@@ -4,7 +4,7 @@ const userController = require('../controllers/users_controller');
 
 router.use(express.json());
 
-router.post('/login', userController.login);
+router.get('/getUserById', userController.getUserById);
 
 
 module.exports = router;

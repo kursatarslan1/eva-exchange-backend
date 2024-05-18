@@ -1,11 +1,11 @@
 const { User } = require("../models/users_model");
 
 
-async function login(req, res){
-    const { email, password } = req.body;
+async function getUserById(req, res){
+    const { user_id } = req.query;
 
     try{
-        const user = await User.login(email, password);
+        const user = await User.GetUserById(user_id);
 
         if(!user){
             return res.status(401).json({ error: "User Not Found" });
@@ -13,9 +13,9 @@ async function login(req, res){
 
         res.json({ user });
     } catch (error){
-        console.error("Login error: " + error);
-        res.status(500).json({ error: "Login unsuccessful" });
+        console.error("Error getting user by id in user controller: " + error);
+        res.status(400).json({ error: "User Not Found" });
     }
 }
 
-module.exports = { login };
+module.exports = { getUserById };

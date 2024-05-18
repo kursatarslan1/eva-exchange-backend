@@ -1,26 +1,31 @@
 const { client } = require("../middleware/database");
 
 class User{
-    constructor(user_id, first_name, last_name, email, phone, password_hash, address, created_at){
+    constructor(user_id, username){
         this.user_id = user_id;
-        this.first_name = first_name;
-        this.last_name = last_name;
-        this.email = email;
-        this.phone = phone;
-        this.password_hash = password_hash;
-        this.address = address;
-        this.created_at = created_at;
+        this.username = username;
     }
 
-    static async login(email, password_hash){
-        const queryText = 'SELECT * FROM users WHERE email = $1 AND password_hash = $2;';
-        const values = [email, password_hash];
+    static async GetUserById(user_id){
+        const queryText = 'SELECT * FROM users WHERE user_id = $1;';
+        const values = [user_id];
 
         try{
             const result = await client.query(queryText, values);
             return result.rows[0];
         } catch (error){
-            console.log('Error login: ', error);
+            console.log('Error getting user by id: ', error);
+        }
+    }
+
+    static async GetBalanceByUserId(user_id){
+        const queryText = 'SELECT cash FROM users WHERE user_id = $1;';
+
+        try{
+            const result = await client.query(queryText, [user_id]);
+            return result.rows[0].cash;
+        } catch (error){
+            console.log('error getting balance by user id: ', error);
         }
     }
 }
